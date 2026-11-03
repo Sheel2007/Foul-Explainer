@@ -1,0 +1,38 @@
+[project]
+name = "foulcheck"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=2.3.0",
+    "fastapi>=0.162.0",
+    "fastembed>=0.9.1",
+    "google-genai>=2.33.0",
+    "pillow>=13.0.0",
+    "pydantic>=2.14.1",
+    "pymupdf>=2.0",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.32",
+    "sqlite-vec>=0.1.9",
+    "uvicorn>=0.54.0",
+]
+
+[project.optional-dependencies]
+fetch = [
+    "playwright>=1.64.1",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-m 'not slow'"
+markers = [
+    "data: needs the built Laws store (run python -m foulcheck.laws.build)",
+    "slow: calls real external APIs; skip with -m 'not slow'",
+]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]

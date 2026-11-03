@@ -1,0 +1,35 @@
+# Secrets. Keys live only in foulcheck/.env
+.env
+.env.*
+!.env.example
+
+# OS and local tool settings
+.DS_Store
+.claude/
+
+# Dependencies and caches
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.tsbuildinfo
+
+# Rule text: the Laws PDF and anything derived from it or the referee guidance pages
+# (© The IFAB, Premier League, UEFA). Rebuild locally with foulcheck.laws.build.
+foulcheck/backend/data/laws/
+
+# Broadcast footage and anything cut from it
+foulcheck/eval/clips/
+foulcheck/explained/
+foulcheck/frontend/public/examples/
+
+# Runtime data
+foulcheck/logs/
+foulcheck/backend/data/cache/
+foulcheck/backend/data/uploads/
+foulcheck/backend/data/feedback/
+foulcheck/backend/data/renders/
+
+# Personal Instagram reel project, kept local only
+var-reel/

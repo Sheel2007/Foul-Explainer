@@ -1,0 +1,19 @@
+{
+  "clip": "5.mp4",
+  "verdict": "foul",
+  "card": "none",
+  "restart": "penalty_kick",
+  "required_sections": [
+    "12.1",
+    "14"
+  ],
+  "difficulty": null,
+  "ruling_source": "Project owner (Sheel), 2026-10-24",
+  "contact_times": [
+    14.1,
+    18.9,
+    25.85
+  ],
+  "contact_source": "Claude, frame-by-frame at 0.15 s steps; views too distant to pin within 0.3 s are left out (live wide view omitted)",
+  "notes": null
+}

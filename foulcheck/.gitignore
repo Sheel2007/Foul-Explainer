@@ -1,0 +1,19 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+logs/
+eval/clips/
+backend/data/laws/*/raw/
+backend/data/laws/*/*.sqlite
+node_modules/
+.next/
+backend/data/cache/
+backend/data/uploads/
+backend/data/feedback/
+explained/
+backend/data/renders/
+
+# fetched referee guidance pages (© Premier League / UEFA)
+backend/data/laws/*/guidance/

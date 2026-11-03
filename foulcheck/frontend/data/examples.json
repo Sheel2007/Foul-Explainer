@@ -1,0 +1,634 @@
+[
+  {
+    "id": "1",
+    "title": "Youth league \u00b7 sliding challenge",
+    "video": "/examples/1_clip.mp4",
+    "poster": "/examples/1_poster.jpg",
+    "ai": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "yellow",
+      "offence_type": "reckless tackle",
+      "confidence": "Low",
+      "explanation": "Defender B committed a foul by lunging into a sliding tackle at high speed with a straight leg, making contact with Attacker A outside the penalty area. Because the challenge was carried out with disregard for the safety of the opponent, it is classified as reckless rather than merely careless. Play must restart with a direct free kick for the attacking team from the spot outside the penalty area where the contact occurred. Defender B must receive a yellow card for unsporting behaviour for committing a reckless direct free kick offence.",
+      "key_moment": "00:05.0",
+      "confidence_detail": {
+        "model_score": 0.8,
+        "score": 0.46,
+        "adjustments": [
+          "-0.24: video model unsure of ball_played_first, contact.body_part_hit, contact.body_part_used",
+          "-0.10: contact not clearly visible"
+        ]
+      },
+      "gray_areas": [
+        "The camera distance leaves whether studs were showing and the precise contact point uncertain; high studs-first contact into the lower leg with excessive force could escalate the offence to serious foul play and a red card.",
+        "Whether Defender B touched the ball first is partially obscured, though a reckless challenge with contact remains an offence regardless of touching the ball."
+      ],
+      "uncertain_fields": [
+        "ball_played_first",
+        "contact.body_part_used",
+        "contact.body_part_hit",
+        "challenge.studs_showing",
+        "players[0].number",
+        "players[1].number",
+        "body_part_used"
+      ],
+      "citations": [
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "A direct free kick is awarded if a player commits any of the following offences against an opponent in a manner considered by the referee to be careless, reckless or using excessive force:... tackles or challenges",
+          "highlight": "tackles or challenges",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "If an offence involves contact, it is penalised by a direct free kick.",
+          "highlight": "direct free kick",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "Reckless is when a player acts with disregard to the danger to, or consequences for, an opponent and must be cautioned",
+          "highlight": "must be cautioned",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.4",
+          "title": "Disciplinary action",
+          "quote": "commits in a reckless manner a direct free kick offence",
+          "highlight": "commits in a reckless manner a direct free kick offence",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=62",
+          "kind": "law"
+        }
+      ]
+    },
+    "facts": {
+      "challenge_type": "sliding tackle",
+      "body_part_used": "leg",
+      "body_part_hit": "lower leg",
+      "ball_played_first": null,
+      "speed_and_force": "high",
+      "location": "outside penalty area",
+      "boot_detail": "The sliding player's leading leg extends along the ground towards the ball and opponent, making contact with the opponent's lower leg as both players contest possession.",
+      "studs_showing": null,
+      "leg_straight": true,
+      "lunge": true,
+      "follow_through": true
+    },
+    "story": null,
+    "moment": {
+      "contact_seconds": 5.0,
+      "contact_box": [
+        415.0,
+        440.0,
+        470.0,
+        485.0
+      ],
+      "views": [
+        {
+          "seconds": 5.0,
+          "kind": "live",
+          "slow_motion": false,
+          "camera": "wide main camera",
+          "clarity": "partial",
+          "chosen": true
+        },
+        {
+          "seconds": 12.1,
+          "kind": "replay",
+          "slow_motion": false,
+          "camera": "wide main camera",
+          "clarity": "partial",
+          "chosen": false
+        }
+      ],
+      "closeup": true,
+      "audit": {
+        "guard_errors": 0,
+        "reran": false,
+        "enforced": 0,
+        "second_opinion": "agree",
+        "decision_s": 12.28
+      }
+    },
+    "label": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "none"
+    }
+  },
+  {
+    "id": "2",
+    "title": "England v Mexico \u00b7 slide on the touchline",
+    "video": "/examples/2_clip.mp4",
+    "poster": "/examples/2_poster.jpg",
+    "ai": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "red",
+      "offence_type": "serious foul play",
+      "confidence": "High",
+      "explanation": "Player A launched a sliding tackle with a straight leg and studs exposed, connecting directly with Player B's shin. Even though Player A touched the ball first, taking the ball does not permit a tackle that endangers the safety of an opponent. Making contact high on the leg with exposed studs endangers player safety and constitutes serious foul play. Play restarts with a direct free kick for the green team outside the penalty area, and Player A is sent off with a red card.",
+      "key_moment": "00:03.8",
+      "confidence_detail": {
+        "model_score": 0.85,
+        "score": 0.85,
+        "adjustments": []
+      },
+      "gray_areas": [
+        "Because the speed and force of the challenge were recorded as medium and the defender touched the ball first, some referees might judge that the contact lacked sufficient force for a red card and instead sanction it as a reckless tackle with a yellow card."
+      ],
+      "uncertain_fields": [],
+      "citations": [
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "A direct free kick is awarded if a player commits any of the following offences against an opponent in a manner considered by the referee to be careless, reckless or using excessive force:",
+          "highlight": "A direct free kick is awarded",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.4",
+          "title": "Disciplinary action",
+          "quote": "Any player who lunges at an opponent in challenging for the ball from the front, from the side or from behind using one or both legs, with excessive force or endangers the safety of an opponent is guilty of serious foul play.",
+          "highlight": "endangers the safety of an opponent is guilty of serious foul play",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=63",
+          "kind": "law"
+        },
+        {
+          "section": "PL",
+          "title": "Serious foul play",
+          "quote": "High + Full + Forceful contact on ankle or above is considered dangerous = Red card",
+          "highlight": "contact on ankle or above is considered dangerous = Red card",
+          "source_url": "https://www.premierleague.com/en/news/4079964",
+          "kind": "guidance"
+        },
+        {
+          "section": "12.4",
+          "title": "Disciplinary action",
+          "quote": "A player, substitute or substituted player who commits any of the following offences is sent off: \u2022 denying the opposing team a goal or an obvious goal-scoring opportunity by committing a deliberate handball offence (except a goalkeeper within their penalty area) \u2022 denying the opposing team a goal or an obvious goal-scoring opportunity by committing a non-deliberate handball offence outside their own penalty area \u2022 denying a goal or an obvious goal-scoring opportunity to an opponent whose overall movement is towards the offender's goal by an offence punishable by a free kick (unless as outlined below) \u2022 serious foul play \u2022 biting or spitting at someone \u2022 violent conduct \u2022 using offensive, insulting or abusive language and/or action(s) \u2022 receiving a second caution in the same match \u2022 entering the video operation room (VOR)",
+          "highlight": "serious foul play",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=62",
+          "kind": "law"
+        }
+      ]
+    },
+    "facts": {
+      "challenge_type": "sliding tackle",
+      "body_part_used": "studs/sole",
+      "body_part_hit": "shin",
+      "ball_played_first": true,
+      "speed_and_force": "medium",
+      "location": "outside penalty area",
+      "boot_detail": "The challenger slides in with studs exposed and connects with the front of the opponent's lower leg.",
+      "studs_showing": true,
+      "leg_straight": true,
+      "lunge": true,
+      "follow_through": true
+    },
+    "story": {
+      "video": "/examples/2_story.mp4",
+      "duration": 7.012426,
+      "strip": [
+        {
+          "src": "/examples/2_strip0.jpg",
+          "seconds": 0.44
+        },
+        {
+          "src": "/examples/2_strip1.jpg",
+          "seconds": 1.31
+        },
+        {
+          "src": "/examples/2_strip2.jpg",
+          "seconds": 2.19
+        },
+        {
+          "src": "/examples/2_strip3.jpg",
+          "seconds": 3.07
+        },
+        {
+          "src": "/examples/2_strip4.jpg",
+          "seconds": 3.94
+        },
+        {
+          "src": "/examples/2_strip5.jpg",
+          "seconds": 4.82
+        },
+        {
+          "src": "/examples/2_strip6.jpg",
+          "seconds": 5.7
+        },
+        {
+          "src": "/examples/2_strip7.jpg",
+          "seconds": 6.57
+        }
+      ],
+      "contact": "/examples/2_contact.jpg",
+      "closeup": "/examples/2_closeup.jpg"
+    },
+    "moment": {
+      "contact_seconds": 3.8,
+      "contact_box": [
+        520.0,
+        430.0,
+        810.0,
+        580.0
+      ],
+      "views": [
+        {
+          "seconds": 1.3,
+          "kind": "live",
+          "slow_motion": false,
+          "camera": "wide main camera",
+          "clarity": "partial",
+          "chosen": false
+        },
+        {
+          "seconds": 3.6,
+          "kind": "replay",
+          "slow_motion": true,
+          "camera": "low-angle pitchside tracking camera",
+          "clarity": "clear",
+          "chosen": true
+        },
+        {
+          "seconds": 5.9,
+          "kind": "replay",
+          "slow_motion": true,
+          "camera": "close-up pitchside angle",
+          "clarity": "clear",
+          "chosen": false
+        }
+      ],
+      "closeup": true,
+      "audit": {
+        "guard_errors": 0,
+        "reran": false,
+        "enforced": 0,
+        "second_opinion": "agree",
+        "decision_s": 17.07
+      }
+    },
+    "label": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "red"
+    }
+  },
+  {
+    "id": "3",
+    "title": "Arsenal \u00b7 sliding tackle in midfield",
+    "video": "/examples/3_clip.mp4",
+    "poster": "/examples/3_poster.jpg",
+    "ai": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "yellow",
+      "offence_type": "reckless tackle",
+      "confidence": "High",
+      "explanation": "Player A executed a sliding tackle from behind, completely missing the ball and tripping Player B by striking his ankle. Because Player A lunged with a straight leg from behind without consideration for the opponent's safety, the challenge is classified as reckless. Since the foul took place in midfield outside the penalty area, the play must restart with a direct free kick. Player A receives a yellow card for the reckless tackle.",
+      "key_moment": "00:04.2",
+      "confidence_detail": {
+        "model_score": 0.95,
+        "score": 0.95,
+        "adjustments": []
+      },
+      "gray_areas": [
+        "A referee might evaluate the straight-legged lunge from behind as endangering safety, which would elevate the sanction from a yellow card to a red card for serious foul play."
+      ],
+      "uncertain_fields": [],
+      "citations": [
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "Reckless is when a player acts with disregard to the danger to, or consequences for, an opponent and must be cautioned",
+          "highlight": "disregard to the danger to, or consequences for, an opponent",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.4",
+          "title": "Disciplinary action",
+          "quote": "commits in a reckless manner a direct free kick offence",
+          "highlight": "commits in a reckless manner a direct free kick offence",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=62",
+          "kind": "law"
+        },
+        {
+          "section": "12.4",
+          "title": "Disciplinary action",
+          "quote": "The yellow card communicates a caution and the red card communicates a sending-off.",
+          "highlight": "yellow card communicates a caution",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=61",
+          "kind": "law"
+        }
+      ]
+    },
+    "facts": {
+      "challenge_type": "sliding tackle",
+      "body_part_used": "instep",
+      "body_part_hit": "ankle",
+      "ball_played_first": false,
+      "speed_and_force": "medium",
+      "location": "outside penalty area",
+      "boot_detail": null,
+      "studs_showing": false,
+      "leg_straight": true,
+      "lunge": true,
+      "follow_through": true
+    },
+    "story": null,
+    "moment": {
+      "contact_seconds": 4.2,
+      "contact_box": null,
+      "views": [
+        {
+          "seconds": 1.8,
+          "kind": "live",
+          "slow_motion": false,
+          "camera": "wide main camera",
+          "clarity": "partial",
+          "chosen": false
+        },
+        {
+          "seconds": 4.2,
+          "kind": "replay",
+          "slow_motion": true,
+          "camera": "low-angle close-up",
+          "clarity": "clear",
+          "chosen": true
+        },
+        {
+          "seconds": 6.8,
+          "kind": "replay",
+          "slow_motion": true,
+          "camera": "reverse-angle close-up",
+          "clarity": "clear",
+          "chosen": false
+        }
+      ],
+      "closeup": false,
+      "audit": {
+        "guard_errors": 0,
+        "reran": false,
+        "enforced": 0,
+        "second_opinion": "agree",
+        "decision_s": 99.59
+      }
+    },
+    "label": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "yellow"
+    }
+  },
+  {
+    "id": "4",
+    "title": "Youth league \u00b7 trip near the box",
+    "video": "/examples/4_clip.mp4",
+    "poster": "/examples/4_poster.jpg",
+    "ai": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "none",
+      "offence_type": "careless tackle",
+      "confidence": "Medium",
+      "explanation": "Dark Blue Defender lunges in from behind and to the side with an extended leg, missing the ball and tripping White 13 as he dribbles through midfield. Because physical contact is made during a mistimed sliding tackle, the referee awards a direct free kick to the white team outside the penalty area. The tackle is made with medium force without clear evidence of endangering the opponent's safety, classifying it as a careless foul. Consequently, no disciplinary card is required for this challenge.",
+      "key_moment": "00:10.0",
+      "confidence_detail": {
+        "model_score": 0.85,
+        "score": 0.65,
+        "adjustments": [
+          "-0.20: a second independent run disagreed on card (none vs yellow)"
+        ]
+      },
+      "gray_areas": [
+        "Whether the tackle was reckless rather than careless: because whether studs were showing is uncertain from the footage, a referee might view the extended lunge from behind as reckless disregard for the opponent, which would warrant a yellow card.",
+        "A second reading of the same facts came out as foul, direct free kick, yellow card."
+      ],
+      "uncertain_fields": [
+        "challenge.studs_showing",
+        "body_part_used"
+      ],
+      "citations": [
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "A direct free kick is awarded if a player commits any of the following offences against an opponent in a manner considered by the referee to be careless, reckless or using excessive force:... tackles or challenges... trips or attempts to trip",
+          "highlight": "tackles or challenges",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "If an offence involves contact, it is penalised by a direct free kick.",
+          "highlight": "penalised by a direct free kick",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "Careless is when a player shows a lack of attention or consideration when making a challenge or acts without precaution. No disciplinary sanction is needed",
+          "highlight": "No disciplinary sanction is needed",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        }
+      ]
+    },
+    "facts": {
+      "challenge_type": "sliding tackle",
+      "body_part_used": "shin",
+      "body_part_hit": "leg",
+      "ball_played_first": false,
+      "speed_and_force": "medium",
+      "location": "outside penalty area",
+      "boot_detail": "The defender lunges in with an extended right leg from behind and to the side, contacting the attacker's lower leg on the follow-through.",
+      "studs_showing": false,
+      "leg_straight": true,
+      "lunge": true,
+      "follow_through": true
+    },
+    "story": null,
+    "moment": {
+      "contact_seconds": 10.0,
+      "contact_box": [
+        540.0,
+        440.0,
+        635.0,
+        505.0
+      ],
+      "views": [
+        {
+          "seconds": 5.1,
+          "kind": "live",
+          "slow_motion": false,
+          "camera": "elevated main camera",
+          "clarity": "clear",
+          "chosen": false
+        },
+        {
+          "seconds": 9.4,
+          "kind": "replay",
+          "slow_motion": false,
+          "camera": "pitch-level sideline camera",
+          "clarity": "clear",
+          "chosen": true
+        }
+      ],
+      "closeup": true,
+      "audit": {
+        "guard_errors": 0,
+        "reran": false,
+        "enforced": 0,
+        "second_opinion": "disagree",
+        "decision_s": 19.06
+      }
+    },
+    "label": {
+      "verdict": "foul",
+      "restart": "direct_free_kick",
+      "card": "none"
+    }
+  },
+  {
+    "id": "5",
+    "title": "Anderlecht v Oostende \u00b7 trip in the box",
+    "video": "/examples/5_clip.mp4",
+    "poster": "/examples/5_poster.jpg",
+    "ai": {
+      "verdict": "foul",
+      "restart": "penalty_kick",
+      "card": "none",
+      "offence_type": "careless trip",
+      "confidence": "High",
+      "explanation": "Defender B lunges across attacker A inside the penalty area, missing the ball completely and tripping the attacker's foot. Because defender B made a mistimed slide while trying to reach the ball with medium force, the action is evaluated as a careless tackle rather than a reckless foul. A direct free kick offence committed inside the defender's own penalty area results in a penalty kick for the attacking team. No disciplinary card is issued because the foul was careless and occurred during a genuine attempt to play the ball.",
+      "key_moment": "00:13.9",
+      "confidence_detail": {
+        "model_score": 0.9,
+        "score": 0.9,
+        "adjustments": []
+      },
+      "gray_areas": [
+        "Uncertainty regarding studs showing could raise the foul to reckless if studs made severe contact, though video compression makes exact boot detail difficult to verify.",
+        "The presence of defender C tracking nearby determines whether this was stopping a promising attack or denying an obvious goal-scoring opportunity."
+      ],
+      "uncertain_fields": [
+        "challenge.studs_showing",
+        "body_part_used"
+      ],
+      "citations": [
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "A direct free kick is awarded if a player commits any of the following offences against an opponent in a manner considered by the referee to be careless, reckless or using excessive force:... tackles or challenges \u2022 trips or attempts to trip",
+          "highlight": "trips or attempts to trip",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "12.1",
+          "title": "Direct free kick",
+          "quote": "Careless is when a player shows a lack of attention or consideration when making a challenge or acts without precaution. No disciplinary sanction is needed",
+          "highlight": "No disciplinary sanction is needed",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
+          "kind": "law"
+        },
+        {
+          "section": "14",
+          "title": "The Penalty Kick",
+          "quote": "A penalty kick is awarded if a player commits a direct free kick offence inside their penalty area or off the field as part of play as outlined in Laws 12 and 13.",
+          "highlight": "A penalty kick is awarded if a player commits a direct free kick offence inside their penalty area",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=68",
+          "kind": "law"
+        },
+        {
+          "section": "12.4",
+          "title": "Disciplinary action",
+          "quote": "commits any other offence which interferes with or stops a promising attack, except where the referee awards a penalty kick for an offence which was an attempt to play the ball or a challenge for the ball",
+          "highlight": "except where the referee awards a penalty kick for an offence which was an attempt to play the ball or a challenge for the ball",
+          "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=62",
+          "kind": "law"
+        }
+      ]
+    },
+    "facts": {
+      "challenge_type": "trip",
+      "body_part_used": "instep",
+      "body_part_hit": "foot",
+      "ball_played_first": false,
+      "speed_and_force": "medium",
+      "location": "inside penalty area",
+      "boot_detail": "The challenger slides in along the turf with an extended leg across the opponent's path.",
+      "studs_showing": false,
+      "leg_straight": true,
+      "lunge": true,
+      "follow_through": true
+    },
+    "story": null,
+    "moment": {
+      "contact_seconds": 13.9,
+      "contact_box": [
+        340.0,
+        275.0,
+        435.0,
+        345.0
+      ],
+      "views": [
+        {
+          "seconds": 4.1,
+          "kind": "live",
+          "slow_motion": false,
+          "camera": "wide main camera",
+          "clarity": "partial",
+          "chosen": false
+        },
+        {
+          "seconds": 14.0,
+          "kind": "replay",
+          "slow_motion": true,
+          "camera": "elevated main camera",
+          "clarity": "clear",
+          "chosen": true
+        },
+        {
+          "seconds": 18.8,
+          "kind": "replay",
+          "slow_motion": true,
+          "camera": "low pitchside camera",
+          "clarity": "clear",
+          "chosen": false
+        },
+        {
+          "seconds": 25.8,
+          "kind": "replay",
+          "slow_motion": true,
+          "camera": "elevated reverse angle",
+          "clarity": "clear",
+          "chosen": false
+        }
+      ],
+      "closeup": true,
+      "audit": {
+        "guard_errors": 0,
+        "reran": false,
+        "enforced": 0,
+        "second_opinion": "agree",
+        "decision_s": 18.57
+      }
+    },
+    "label": {
+      "verdict": "foul",
+      "restart": "penalty_kick",
+      "card": "none"
+    }
+  }
+]

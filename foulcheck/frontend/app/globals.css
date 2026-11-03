@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #14171a;
+  --surface: #f5f7f6;
+  --line: #dfe4e1;
+  --muted: #5f6b66;
+  --pitch: #15803d;
+  --pitch-dark: #166534;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0d110f;
+    --foreground: #e9eeeb;
+    --surface: #161c19;
+    --line: #2a332f;
+    --muted: #95a39c;
+    --pitch: #22a355;
+    --pitch-dark: #1a8a46;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-muted: var(--muted);
+  --color-pitch: var(--pitch);
+  --color-pitch-dark: var(--pitch-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  /* 3D hero cards can escape their overflow-hidden parent; clip (unlike hidden) keeps position: sticky working */
+  overflow-x: clip;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Dark palette for content placed over video (the hero), whatever the system theme. */
+.on-dark {
+  --background: #0d110f;
+  --foreground: #eef2ef;
+  --surface: rgba(255, 255, 255, 0.06);
+  --line: rgba(255, 255, 255, 0.16);
+  --muted: #a9b5af;
+  --pitch: #22a355;
+  --pitch-dark: #1a8a46;
+  color: var(--foreground);
+}
+
+/* Hero: floating incident cards (components/FoulField.tsx). The scene tilts towards the pointer. */
+.foul-scene {
+  transform: rotateX(calc(var(--py, 0) * -7deg)) rotateY(calc(var(--px, 0) * 10deg));
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.foul-float {
+  animation: foul-float 10s ease-in-out infinite alternate;
+}
+
+@keyframes foul-float {
+  from {
+    transform: translate3d(0, -14px, 0) rotateZ(-1.5deg);
+  }
+  to {
+    transform: translate3d(0, 14px, 0) rotateZ(1.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .foul-float {
+    animation: none;
+  }
+  .foul-scene {
+    transition: none;
+  }
+}
