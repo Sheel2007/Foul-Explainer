@@ -7,7 +7,6 @@ export default function SiteHeader() {
         <Link href="/" className="mr-auto font-semibold tracking-tight">
           Foul Explainer
         </Link>
-        <Link href="/#why" className="hidden text-sm text-white/70 hover:text-white sm:inline">Why</Link>
         <Link href="/#how" className="hidden text-sm text-white/70 hover:text-white sm:inline">How it works</Link>
         <Link href="/#examples" className="text-sm text-white/70 hover:text-white">Examples</Link>
         <Link href="/#try" className="rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-black hover:bg-white/90">
