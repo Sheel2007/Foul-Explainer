@@ -142,7 +142,7 @@ export default function StoryPlayer({ ex }: { ex: Example }) {
   ];
 
   return (
-    <section aria-label="See how it judges one tackle" className="on-dark bg-[#070a08] py-16 sm:py-20">
+    <section id="story" aria-label="See how it judges one tackle" className="on-dark scroll-mt-16 border-t border-white/10 bg-[#070a08] py-16 sm:py-20">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-4 sm:px-6">
         <div ref={frameRef} className="relative aspect-video" style={{ width: "min(100%, calc((100svh - 57px - 12rem) * 16 / 9))" }}>
           {/* the frame, which zooms on the contact */}

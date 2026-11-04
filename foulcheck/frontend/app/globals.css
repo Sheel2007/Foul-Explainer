@@ -35,8 +35,6 @@
 }
 
 body {
-  /* 3D hero cards can escape their overflow-hidden parent; clip (unlike hidden) keeps position: sticky working */
-  overflow-x: clip;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
@@ -58,30 +56,18 @@ summary::-webkit-details-marker {
   color: var(--foreground);
 }
 
-/* Hero: floating incident cards (components/FoulField.tsx). The scene tilts towards the pointer. */
-.foul-scene {
-  transform: rotateX(calc(var(--py, 0) * -7deg)) rotateY(calc(var(--px, 0) * 10deg));
-  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+/* Stadium scoreboard on the homepage comparison: mono text, glowing; .led-dots cuts large text into dots. */
+.led-text {
+  font-family: var(--font-geist-mono), monospace;
+  text-shadow: 0 0 10px currentColor;
 }
 
-.foul-float {
-  animation: foul-float 10s ease-in-out infinite alternate;
-}
-
-@keyframes foul-float {
-  from {
-    transform: translate3d(0, -14px, 0) rotateZ(-1.5deg);
-  }
-  to {
-    transform: translate3d(0, 14px, 0) rotateZ(1.5deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .foul-float {
-    animation: none;
-  }
-  .foul-scene {
-    transition: none;
+/* phones keep solid text: at that size dots would make it unreadable */
+@media (min-width: 640px) {
+  .led-dots {
+    -webkit-mask-image: radial-gradient(circle, #000 68%, transparent 72%);
+    mask-image: radial-gradient(circle, #000 68%, transparent 72%);
+    -webkit-mask-size: 3px 3px;
+    mask-size: 3px 3px;
   }
 }

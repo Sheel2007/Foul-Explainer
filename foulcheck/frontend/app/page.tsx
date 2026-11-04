@@ -1,8 +1,9 @@
 import ExamplesViewer from "@/components/ExamplesViewer";
 import FoulExplainer from "@/components/FoulExplainer";
-import FoulField from "@/components/FoulField";
+import FanQuestions from "@/components/FanQuestions";
 import Pipeline from "@/components/Pipeline";
 import StoryPlayer from "@/components/StoryPlayer";
+import VerdictCompare from "@/components/VerdictCompare";
 import examplesData from "@/data/examples.json";
 import type { Example } from "@/lib/types";
 
@@ -14,32 +15,31 @@ const story = examples.find((e) => e.story) ?? null;
 export default function Home() {
   return (
     <>
-      <section className="on-dark relative isolate flex min-h-[calc(100svh-57px)] items-center overflow-hidden bg-[#070a08]">
-        <div aria-hidden className="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_50%_120%,#14532d_0%,transparent_60%)]" />
-        <div className="absolute inset-0 -z-10">
-          <FoulField />
-        </div>
-        {/* keep the centre readable over the cards */}
-        <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_55%_45%_at_50%_50%,rgba(7,10,8,0.92)_0%,rgba(7,10,8,0.6)_55%,transparent_100%)]" />
-        <div className="mx-auto w-full max-w-3xl px-4 py-24 text-center sm:px-6">
-          <p className="text-sm font-medium tracking-wide text-green-300">AI referee decisions, explained</p>
-          <h1 className="mt-4 text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl">
-            One call can change a match.
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted">
-            Foul Explainer watches a clip of a tackle or handball and tells you the call, the card, and the exact line of
-            the Laws of the Game behind it, so you can see why, not just what.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <a href="#examples" className="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-white/90">
-              See it judge {examples.length} real tackles
-            </a>
-            <a href="#try" className="rounded-xl bg-black/60 px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/25 backdrop-blur hover:bg-white/10">
-              Try your own clip
-            </a>
+      <section className="on-dark bg-[#070a08] text-white">
+        <div className="mx-auto grid min-h-[calc(100svh-57px)] w-full max-w-6xl items-center gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-12">
+          <div>
+            <h1 className="text-4xl font-semibold leading-[1.04] tracking-tight sm:text-5xl">
+              VAR tells you what.
+              <span className="mt-1 block text-green-300">Foul Explainer shows you why.</span>
+            </h1>
+            <p className="mt-5 max-w-md text-lg leading-relaxed text-white/70">
+              Give it a clip of a tackle or handball. An AI makes the call, quotes the exact rule behind it, and tells you how sure it is.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <a href="#story" className="rounded-lg bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-white/90">
+                Watch it judge a tackle
+              </a>
+              <a href="#try" className="rounded-lg px-5 py-3 text-sm font-semibold ring-1 ring-white/25 hover:bg-white/10">
+                Try your own clip
+              </a>
+            </div>
+            <p className="mt-5 text-xs text-white/50">An explanation for fans, not an official ruling.</p>
           </div>
+          {story && <VerdictCompare ex={story} />}
         </div>
       </section>
+
+      {story && <FanQuestions examples={examples} story={story} />}
 
       {story && <StoryPlayer ex={story} />}
       {story && <Pipeline ex={story} />}
