@@ -1,6 +1,10 @@
 import type { JobStatus, Ruling } from "./types";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// A hosted build only analyses uploads if NEXT_PUBLIC_API_URL points at a running backend.
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? (process.env.NODE_ENV === "development" ? "http://localhost:8000" : "");
+export const HAS_ANALYSIS_SERVER = Boolean(API_URL);
+export const REPO_URL = "https://github.com/Sheel2007/Foul-Explainer";
 
 async function errorText(res: Response): Promise<string> {
   try {

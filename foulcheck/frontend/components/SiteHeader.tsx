@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HAS_ANALYSIS_SERVER } from "@/lib/api";
 
 export default function SiteHeader() {
   return (
@@ -10,7 +11,7 @@ export default function SiteHeader() {
         <Link href="/#how" className="hidden text-sm text-white/70 hover:text-white sm:inline">How it works</Link>
         <Link href="/#examples" className="text-sm text-white/70 hover:text-white">Examples</Link>
         <Link href="/#try" className="rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-black hover:bg-white/90">
-          Try it
+          {HAS_ANALYSIS_SERVER ? "Try it" : "Run it"}
         </Link>
       </nav>
     </header>

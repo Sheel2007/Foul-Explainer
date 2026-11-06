@@ -109,6 +109,7 @@ export interface JobStatus {
 export interface Example {
   id: string;
   title: string;
+  video_model: string | null;
   video: string;
   poster: string;
   ai: {
@@ -132,6 +133,7 @@ export interface Example {
     speed_and_force: string | null;
     location: string | null;
     boot_detail: string | null;
+    handball: { touched: boolean | null; arm_position: string | null; deliberate_movement: boolean | null };
     studs_showing: boolean | null;
     leg_straight: boolean | null;
     lunge: boolean | null;

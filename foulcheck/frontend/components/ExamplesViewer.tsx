@@ -43,6 +43,8 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
     .sort((a, b) => specificity(a) - specificity(b))
     .slice(0, 3);
   const detail = ex.ai.confidence_detail;
+  // say so when a clip was watched by a different video model from the rest
+  const usual = examples.filter((e) => e.video_model === ex.video_model).length > examples.length / 2;
   const is = (k: "verdict" | "restart" | "card") => (label?.[k] ? ex.ai[k] === label[k] : null);
 
   return (
@@ -51,7 +53,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="text-sm font-medium text-pitch">See it work</p>
-            <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{examples.length} real tackles, judged</h2>
+            <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{examples.length} real incidents, judged</h2>
             <p className="mt-3 max-w-xl text-muted">
               Pick a clip. Beside it: the call, why, the rule it used, how sure it was, and whether it matched the answer key.
             </p>
@@ -78,7 +80,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
             />
             <div role="tablist" aria-label="Test clips" className="grid grid-cols-5 gap-2">
               {examples.map((e, n) => {
-                const ok = !e.label?.card || e.ai.card === e.label.card;
+                const ok = e.ai.card === e.label?.card;
                 return (
                   <button
                     key={e.id}
@@ -97,7 +99,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
                         )}
                         <span className="hidden sm:inline">{e.ai.card === "none" ? "No card" : e.ai.card === "red" ? "Red" : "Yellow"}</span>
                       </span>
-                      {e.label && <span className={ok ? "text-green-300" : "text-red-400"}>{ok ? "✓" : "✗"}</span>}
+                      {e.label?.card && <span className={ok ? "text-green-300" : "text-red-400"}>{ok ? "✓" : "✗"}</span>}
                     </span>
                   </button>
                 );
@@ -110,6 +112,11 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
             <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-surface lg:absolute lg:inset-0">
               <div className="border-b border-line p-5">
                 <p className="text-xs text-muted">{ex.title}</p>
+                {!usual && ex.video_model && (
+                  <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
+                    Watched by {ex.video_model}, not the model used for the other clips, because that model was overloaded.
+                  </p>
+                )}
                 <div className="mt-1 flex items-start gap-3">
                   <div className="min-w-0 flex-1">
                     <p className="text-2xl font-bold tracking-tight">
@@ -125,6 +132,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
                     <span aria-hidden className={`h-10 w-7 shrink-0 rotate-6 rounded-md shadow ${ex.ai.card === "yellow" ? "bg-yellow-400" : "bg-red-600"}`} />
                   )}
                 </div>
+                {!label && <p className="mt-3 text-xs text-muted">No answer key: the right call on this one is debatable.</p>}
                 {label && (
                   <p className="mt-3 text-xs text-muted">
                     Answer key: {label.verdict ? VERDICT_LABEL[label.verdict] : "–"}
@@ -192,11 +200,22 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
                   <>
                     <dl>
                       <Fact label="Challenge" value={f.challenge_type} />
-                      <Fact label="Contact" value={[f.body_part_used, f.body_part_hit].filter(Boolean).join(" → ") || null} />
-                      <Fact label="Studs showing" value={yes(f.studs_showing)} />
-                      <Fact label="Straight leg / lunge" value={`${yes(f.leg_straight)} / ${yes(f.lunge)}`} />
-                      <Fact label="Ball played first" value={yes(f.ball_played_first)} />
-                      <Fact label="Speed and force" value={f.speed_and_force} />
+                      {f.handball.touched ? (
+                        <>
+                          <Fact label="Ball hit hand or arm" value="Yes" />
+                          <Fact label="Arm position" value={f.handball.arm_position} />
+                          <Fact label="Deliberate movement" value={yes(f.handball.deliberate_movement)} />
+                          <Fact label="Location" value={f.location} />
+                        </>
+                      ) : (
+                        <>
+                          <Fact label="Contact" value={[f.body_part_used, f.body_part_hit].filter(Boolean).join(" → ") || null} />
+                          <Fact label="Studs showing" value={yes(f.studs_showing)} />
+                          <Fact label="Straight leg / lunge" value={`${yes(f.leg_straight)} / ${yes(f.lunge)}`} />
+                          <Fact label="Ball played first" value={yes(f.ball_played_first)} />
+                          <Fact label="Speed and force" value={f.speed_and_force} />
+                        </>
+                      )}
                     </dl>
                     {f.boot_detail && <p className="mt-3 text-sm italic text-muted">{f.boot_detail}</p>}
                   </>

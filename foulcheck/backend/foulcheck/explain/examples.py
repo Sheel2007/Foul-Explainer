@@ -9,6 +9,7 @@ Usage (from backend/): uv run python -m foulcheck.explain.examples
 """
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -25,12 +26,18 @@ FRONTEND = config.REPO_DIR / "frontend"
 STORY_ID = "2"  # the clip the homepage's scroll story and pipeline diagram walk through
 STRIP_FRAMES = 8  # thumbnails in the pipeline diagram's film strip
 TITLES = {
-    "1": "Youth league · sliding challenge",
+    "1": "Liverpool v Real Madrid · shot hits the arm",
     "2": "England v Mexico · slide on the touchline",
     "3": "Arsenal · sliding tackle in midfield",
     "4": "Youth league · trip near the box",
     "5": "Anderlecht v Oostende · trip in the box",
 }
+
+
+def _video_model(r: Ruling) -> str | None:
+    """The model behind the video step, from the analyzer id ('gemini-gemini-3.8-flash-l2-...')."""
+    m = re.search(r"gemini-[\d.]+-flash(-lite)?", r.video.analyzer) if r.video else None
+    return m.group(0) if m else None
 
 
 def _frame(source: Path, at: float, out: Path, vf: str) -> str:
@@ -83,6 +90,7 @@ def export(out_public: Path = FRONTEND / "public" / "examples", out_json: Path =
         examples.append({
             "id": stem,
             "title": TITLES.get(stem, f"Clip {stem}"),
+            "video_model": _video_model(r),
             "video": f"/examples/{video.name}",
             "poster": f"/examples/{poster.name}",
             "ai": {
@@ -99,6 +107,7 @@ def export(out_public: Path = FRONTEND / "public" / "examples", out_json: Path =
                 "challenge_type": o.challenge_type, "body_part_used": o.contact.body_part_used,
                 "body_part_hit": o.contact.body_part_hit, "ball_played_first": o.ball_played_first,
                 "speed_and_force": o.speed_and_force, "location": o.location, "boot_detail": o.boot_detail,
+                "handball": o.handball.model_dump(),
                 "studs_showing": o.challenge.studs_showing, "leg_straight": o.challenge.leg_straight,
                 "lunge": o.challenge.lunge, "follow_through": o.challenge.follow_through,
             } if o else None,

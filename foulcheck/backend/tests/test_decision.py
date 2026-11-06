@@ -11,7 +11,7 @@ from foulcheck.laws.retrieve import Retriever
 from foulcheck.laws.store import LawStore
 from foulcheck.laws.tags import tag_chunks
 from foulcheck.pipeline import analyze_clip
-from foulcheck.video.schema import LocateResult, Observation, VideoAnalysis, View
+from foulcheck.video.schema import ChallengeDetail, LocateResult, Observation, VideoAnalysis, View
 from tests.conftest import make_chunk
 
 CHUNKS = [
@@ -128,6 +128,28 @@ def test_confidence_disagreement_view_and_location_checks():
     c = confidence.assess(draft(restart="penalty_kick"), poor, second=draft(card="red"))
     assert c.score == pytest.approx(0.8 - 0.1 - 0.1 - 0.2) and c.level == "Low"
     assert any("second independent run" in a and "card (yellow vs red)" in a for a in c.adjustments)
+
+
+def test_red_card_resting_on_a_video_reading_loses_confidence():
+    studs = OBS.model_copy(update={"challenge": ChallengeDetail(studs_showing=True), "speed_and_force": "high"})
+    c = confidence.assess(draft(card="red", confidence=0.95), studs, second=draft(card="red"))
+    assert c.score == pytest.approx(0.70) and c.level == "Medium"
+    assert any("studs showing and high force" in a for a in c.adjustments)
+
+
+def test_other_calls_are_not_marked_as_hinging_on_a_reading():
+    studs = OBS.model_copy(update={"challenge": ChallengeDetail(studs_showing=True)})
+    assert confidence.red_card_hinges("yellow", studs) == []  # not a red card
+    assert confidence.red_card_hinges("red", OBS.model_copy(update={"speed_and_force": "low"})) == []  # no such reading
+    no_contact = Observation(contact={"made": False}, challenge=ChallengeDetail(studs_showing=True))
+    assert confidence.red_card_hinges("red", no_contact) == []
+
+
+def test_engine_names_the_reading_a_red_card_depends_on():
+    studs = OBS.model_copy(update={"challenge": ChallengeDetail(studs_showing=True)})
+    fake = FakeText({0: [draft(card="red").model_dump_json()]})
+    ruling = DecisionEngine(fake, second_opinion=False).decide(studs, CHUNKS)
+    assert any("depends on studs showing" in g for g in ruling.gray_areas)
 
 
 def test_confidence_capped_for_cannot_determine():

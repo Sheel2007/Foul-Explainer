@@ -1,0 +1,6 @@
+# Deploys upload this folder directly. Keep secrets out; public/examples must stay in, even though
+# git ignores it, because the site's frames and clips live there.
+.env*
+!.env.example
+node_modules
+.next

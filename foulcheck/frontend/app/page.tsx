@@ -1,8 +1,10 @@
 import ExamplesViewer from "@/components/ExamplesViewer";
 import FoulExplainer from "@/components/FoulExplainer";
 import Pipeline from "@/components/Pipeline";
+import UploadUnavailable from "@/components/UploadUnavailable";
 import VerdictCompare from "@/components/VerdictCompare";
 import examplesData from "@/data/examples.json";
+import { HAS_ANALYSIS_SERVER } from "@/lib/api";
 import type { Example } from "@/lib/types";
 
 const examples = examplesData as Example[];
@@ -29,7 +31,7 @@ export default function Home() {
                 See how it works
               </a>
               <a href="#try" className="rounded-lg px-5 py-3 text-sm font-semibold ring-1 ring-white/25 hover:bg-white/10">
-                Try your own clip
+                {HAS_ANALYSIS_SERVER ? "Try your own clip" : "Run it on your own clip"}
               </a>
             </div>
           </div>
@@ -42,7 +44,7 @@ export default function Home() {
       {examples.length > 0 && <ExamplesViewer examples={examples} />}
 
       <section id="try" className="scroll-mt-16 border-t border-line bg-surface/50">
-        <FoulExplainer embedded />
+        {HAS_ANALYSIS_SERVER ? <FoulExplainer embedded /> : <UploadUnavailable embedded />}
       </section>
 
       <footer className="border-t border-line">

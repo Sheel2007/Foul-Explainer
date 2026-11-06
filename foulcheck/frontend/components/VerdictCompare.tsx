@@ -94,7 +94,7 @@ export default function VerdictCompare({ ex }: { ex: Example }) {
                 <span className="line-clamp-3">{ex.ai.explanation}</span>
               )}
             </Answer>
-            <Answer name="Same checklist, every tackle">
+            <Answer name="Same checklist, every clip">
               {checks.map(([name, v]) => (
                 <span key={name} className="mr-2 inline-block whitespace-nowrap">
                   {name} {v ? "✓" : v === false ? "✗" : "?"}

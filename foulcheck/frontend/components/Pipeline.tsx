@@ -145,11 +145,13 @@ export default function Pipeline({ ex }: { ex: Example }) {
   const conf = ex.ai.confidence_detail;
   const points = (match: RegExp) =>
     conf.adjustments.filter((a) => match.test(a)).reduce((sum, a) => sum + explainAdjustment(a).points, 0);
-  const other = points(/^(?!.*(unsure|clearly visible|disagreed|capped))/);
+  const hinge = points(/red card depends/);
+  const other = points(/^(?!.*(unsure|clearly visible|disagreed|red card depends|capped))/);
   const working: (readonly [string, number])[] = [
     ["Key facts unclear", points(/unsure/)],
     ["Contact hard to see", points(/clearly visible/)],
     ["Second run disagreed", points(/disagreed/)],
+    ...(hinge ? [["Card rests on one reading", hinge] as const] : []),
     ...(other ? [["Other checks", other] as const] : []),
   ];
 

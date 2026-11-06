@@ -44,7 +44,7 @@ npm run dev
 Open http://localhost:3000, drop in a clip (MP4, MOV or WebM, up to 60 s), and wait.
 
 - **API keys:** a visitor's key is sent only with that upload, held in memory for that one analysis, and never written to disk, logs or the browser. Your own key lives only in `.env`.
-- **Homepage examples:** the walkthrough, pipeline diagram and "5 real tackles, judged" section are built from the test clips in `eval/clips/` and their saved rulings. Refresh them after re-running the clips, from `backend/`:
+- **Homepage examples:** the walkthrough, pipeline diagram and "5 real incidents, judged" section are built from the test clips in `eval/clips/` and their saved rulings. Refresh them after re-running the clips, from `backend/`:
 
   ```bash
   uv run python -m foulcheck.explain.examples

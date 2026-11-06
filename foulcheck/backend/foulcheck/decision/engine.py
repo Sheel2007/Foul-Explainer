@@ -42,7 +42,8 @@ class DecisionEngine:
                video: VideoAnalysis | None = None) -> Ruling:
         notes: list[str] = []
         started = time.monotonic()
-        audit: dict = {"guard_errors": 0, "reran": False, "enforced": 0, "second_opinion": "off"}
+        audit: dict = {"guard_errors": 0, "reran": False, "enforced": 0, "second_opinion": "off",
+                       "decision_model": getattr(self.model, "model", self.model.name)}
         with ThreadPoolExecutor(max_workers=2) as pool:
             main = pool.submit(self._draft, obs, chunks, context, 0)
             second = pool.submit(self._draft, obs, chunks, context, 1) if self.second_opinion else None
@@ -74,6 +75,9 @@ class DecisionEngine:
         if other is not None and (other.verdict, other.restart, other.card) != (draft.verdict, draft.restart, draft.card):
             gray.append(f"A second reading of the same facts came out as {other.verdict.replace('_', ' ')}, "
                         f"{other.restart.replace('_', ' ')}, {other.card} card.")
+        hinges = confidence.red_card_hinges(draft.card, obs)
+        if hinges:
+            gray.append(confidence.hinge_gray_area(hinges))
         cfg = laws_config()
         return Ruling(
             verdict=draft.verdict, offence_type=draft.offence_type, restart=draft.restart, card=draft.card,

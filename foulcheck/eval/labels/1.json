@@ -1,17 +1,12 @@
 {
   "clip": "1.mp4",
-  "verdict": "foul",
-  "card": "none",
-  "restart": "direct_free_kick",
-  "required_sections": [
-    "12.1"
-  ],
+  "verdict": null,
+  "card": null,
+  "restart": null,
+  "required_sections": [],
   "difficulty": null,
-  "ruling_source": "Project owner (Sheel), 2026-10-24; restart for clips 1-4 inferred as direct free kick (foul, not a penalty)",
-  "contact_times": [
-    5.0,
-    12.0
-  ],
-  "contact_source": "Claude, frame-by-frame at 0.15 s steps; views too distant to pin within 0.3 s are left out",
-  "notes": null
+  "ruling_source": null,
+  "contact_times": [],
+  "contact_source": null,
+  "notes": "No answer key on purpose: a debatable handball (Liverpool v Real Madrid, from a CBS Sports Golazo highlight). The previous clip 1 is in explained/previous-clip-1/."
 }
