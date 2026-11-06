@@ -91,7 +91,7 @@ export default function FoulExplainer({ embedded = false }: { embedded?: boolean
           </Title>
           <p className={`text-muted ${embedded ? "mt-3" : "text-sm"}`}>
             {embedded && phase === "idle"
-              ? "One incident, 5 to 30 seconds. You need a free Gemini API key; it's used for this analysis only and never saved."
+              ? "One incident, 5 to 30 seconds. You need your own API key from Gemini, Anthropic or OpenAI; it's used for this analysis only and never saved."
               : "See how the Laws of the Game apply to it."}
           </p>
         </div>

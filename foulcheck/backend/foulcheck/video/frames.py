@@ -1,16 +1,18 @@
 """Model-agnostic fallback: ffmpeg pulls frames, any vision model reads them as an image sequence."""
 
 import base64
+import json
+import tempfile
 from pathlib import Path
 from typing import Protocol, TypeVar
 
 from pydantic import BaseModel
 
 from foulcheck import config, llm
-from foulcheck.clients import gemini_client
+from foulcheck.clients import anthropic_client, gemini_client, openai_client
 from foulcheck.video import ffmpeg, prompts
 from foulcheck.video.base import VideoAnalyzer, check_neutral
-from foulcheck.video.schema import LocateResult, Observation, View, fmt_ts
+from foulcheck.video.schema import CloseUp, LocateResult, Observation, View, fmt_ts
 
 M = TypeVar("M", bound=BaseModel)
 Frames = list[tuple[float, bytes]]
@@ -60,7 +62,7 @@ class ClaudeVision:
         import anthropic
 
         if self._client is None:
-            self._client = anthropic.Anthropic(timeout=float(config.MODEL_TIMEOUT_S))
+            self._client = anthropic_client()
         content: list[dict] = [{"type": "text", "text": FRAMES_INTRO}]
         for t, jpg in frames:
             content += [
@@ -83,7 +85,29 @@ class ClaudeVision:
         return resp.parsed_output.model_dump_json()
 
 
+class OpenAIVision:
+    def __init__(self, model: str = config.OPENAI_MODEL, client=None):
+        self.model = model
+        self.name = model
+        self._client = client
+
+    def generate(self, frames: Frames, prompt: str, schema: type[M]) -> str:
+        if self._client is None:
+            self._client = openai_client()
+        content: list[dict] = [{"type": "text", "text": FRAMES_INTRO}]
+        for t, jpg in frames:
+            url = f"data:image/jpeg;base64,{base64.standard_b64encode(jpg).decode()}"
+            content += [{"type": "text", "text": f"[{fmt_ts(t)}]"},
+                        {"type": "image_url", "image_url": {"url": url, "detail": "high"}}]
+        content.append({"type": "text", "text": f"{prompt}\n\nReply with JSON matching this schema:\n{json.dumps(schema.model_json_schema())}"})
+        resp = self._client.chat.completions.create(model=self.model, messages=[{"role": "user", "content": content}],
+                                                    response_format={"type": "json_object"})
+        return resp.choices[0].message.content
+
+
 class FrameSequenceAnalyzer(VideoAnalyzer):
+    supports_closeup = True
+
     def __init__(self, backend: VisionBackend, locate_width: int = 512, inspect_width: int = 960, **kw):
         super().__init__(**kw)
         self.backend = backend
@@ -109,3 +133,9 @@ class FrameSequenceAnalyzer(VideoAnalyzer):
         frames = ffmpeg.extract_frames(path, start, end, self.inspect_fps, self.inspect_width)
         return self._generate("frames-inspect", Observation, frames,
                               prompts.inspect(locate, view, start, end), path.name)
+
+    def closeup(self, path: Path, obs: Observation, start: float, end: float) -> CloseUp:
+        with tempfile.TemporaryDirectory() as tmp:
+            crop = ffmpeg.crop_clip(path, start, end, obs.contact_box, Path(tmp) / "closeup.mp4")
+            frames = ffmpeg.extract_frames(crop, 0.0, end - start, self.inspect_fps, self.inspect_width)
+        return self._generate("frames-closeup", CloseUp, frames, prompts.closeup(obs), path.name)

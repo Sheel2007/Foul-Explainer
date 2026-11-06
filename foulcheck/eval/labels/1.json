@@ -1,12 +1,15 @@
 {
   "clip": "1.mp4",
-  "verdict": null,
-  "card": null,
-  "restart": null,
-  "required_sections": [],
+  "verdict": "handball",
+  "card": "none",
+  "restart": "penalty_kick",
+  "required_sections": [
+    "12.1",
+    "14"
+  ],
   "difficulty": null,
-  "ruling_source": null,
+  "ruling_source": "Project owner (Sheel), 2026-11-06: handball, penalty, no red card",
   "contact_times": [],
   "contact_source": null,
-  "notes": "No answer key on purpose: a debatable handball (Liverpool v Real Madrid, from a CBS Sports Golazo highlight). The previous clip 1 is in explained/previous-clip-1/."
+  "notes": "Liverpool v Real Madrid, from a CBS Sports Golazo highlight. The call is debatable. Recorded as no card from 'no red'. The previous clip 1 is in explained/previous-clip-1/."
 }

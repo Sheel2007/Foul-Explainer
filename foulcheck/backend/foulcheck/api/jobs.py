@@ -45,11 +45,16 @@ class Job(BaseModel):
 
 def friendly_error(exc: Exception) -> str:
     text = str(exc)
-    if "API_KEY_INVALID" in text or "API key not valid" in text or "PERMISSION_DENIED" in text:
-        return "Your Gemini API key was rejected. Check it and try again."
+    if any(s in text for s in ("API_KEY_INVALID", "API key not valid", "PERMISSION_DENIED", "authentication_error",
+                               "invalid_api_key", "Incorrect API key", "invalid x-api-key")):
+        return "Your API key was rejected. Check it and try again."
+    if "credit balance" in text or "insufficient_quota" in text:
+        return "That API key's account has no credit left. Add some with that provider and try again."
+    if "model_not_found" in text or "not_found_error" in text:
+        return "That API key can't use the model this tool needs. Try a key from another provider."
     if "RESOURCE_EXHAUSTED" in text or "429" in text:
         return "The AI service is out of quota right now. Please try again later."
-    if "UNAVAILABLE" in text or "503" in text:
+    if "UNAVAILABLE" in text or "503" in text or "overloaded_error" in text or "529" in text:
         return "The AI service is overloaded right now. Please try again in a few minutes."
     if isinstance(exc, llm.ModelOutputError):
         return "The model returned an answer we could not validate. Please try again."

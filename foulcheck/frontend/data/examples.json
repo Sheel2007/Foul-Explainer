@@ -109,7 +109,11 @@
         "decision_s": 32.5
       }
     },
-    "label": null
+    "label": {
+      "verdict": "handball",
+      "restart": "penalty_kick",
+      "card": "none"
+    }
   },
   {
     "id": "2",

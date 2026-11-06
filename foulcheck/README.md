@@ -13,6 +13,7 @@ It is an explanation of how the Laws apply to what the model saw, not an officia
 
 - Install `ffmpeg` and `uv`.
 - Put `GEMINI_API_KEY=...` in `foulcheck/.env`. The free tier works; it allows about 5 clips a day.
+- In the web app you can instead paste a Gemini, Anthropic or OpenAI key. The tool detects the company from the key and runs both steps on that company's models. Gemini has a free tier; the others bill your account, and they read still frames rather than the video itself.
 - To let the web app use that key when a visitor doesn't enter their own, also set
   `FOULCHECK_ALLOW_SERVER_KEY=1` in `.env`. Leave it unset on a public site, so visitors must bring their own free Gemini key.
 - Optional, once: save the Premier League and UEFA referee guidance pages (needs Google Chrome installed), from `backend/`:

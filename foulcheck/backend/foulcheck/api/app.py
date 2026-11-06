@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field
 from foulcheck import config
 from foulcheck.api.jobs import JobStore, Renderer, Runner
 from foulcheck.decision.schema import Ruling
+from foulcheck.providers import detect_provider
 from foulcheck.video import ffmpeg
 
 ALLOWED = {".mp4": "video/mp4", ".mov": "video/quicktime", ".webm": "video/webm", ".m4v": "video/mp4"}
@@ -37,16 +38,16 @@ class Feedback(BaseModel):
 def default_runner() -> Runner:
     from foulcheck.decision.engine import DecisionEngine
     from foulcheck.pipeline import analyze_clip
+    from foulcheck.providers import models_for_key
     from foulcheck.video import make_analyzer
-
-    from foulcheck.decision.models import make_text_model
 
     shared = None  # built lazily; uses the server's .env key
 
     def run(path, context, progress, api_key=None) -> Ruling:
         nonlocal shared
         if api_key:  # a visitor's key: fresh clients for this job only
-            analyzer, engine = make_analyzer(api_key=api_key), DecisionEngine(make_text_model(api_key=api_key))
+            analyzer, text_model = models_for_key(api_key)
+            engine = DecisionEngine(text_model)
         else:
             shared = shared or (make_analyzer(), DecisionEngine())
             analyzer, engine = shared
@@ -84,12 +85,13 @@ def create_app(runner: Runner | None = None, renderer: Renderer | None = None) -
 
     @app.post("/api/jobs", status_code=202)
     def create_job(file: UploadFile = File(...), context: str | None = Form(None),
-                   x_gemini_api_key: str | None = Header(None)):
-        api_key = (x_gemini_api_key or "").strip() or None
+                   x_api_key: str | None = Header(None)):
+        api_key = (x_api_key or "").strip() or None
         if api_key is None and not server_key_available():
-            raise HTTPException(401, "Add your Gemini API key to run the analysis.")
-        if api_key is not None and (len(api_key) < 20 or len(api_key) > 200 or any(ch.isspace() for ch in api_key)):
-            raise HTTPException(400, "That doesn't look like a Gemini API key.")
+            raise HTTPException(401, "Add your API key to run the analysis.")
+        if api_key is not None and (len(api_key) < 20 or len(api_key) > 400 or any(ch.isspace() for ch in api_key)
+                                    or detect_provider(api_key) is None):
+            raise HTTPException(400, "That doesn't look like a Gemini, Anthropic or OpenAI API key.")
         ext = Path(file.filename or "").suffix.lower()
         if ext not in ALLOWED:
             raise HTTPException(400, "Upload an MP4, MOV or WebM video.")

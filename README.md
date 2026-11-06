@@ -20,7 +20,7 @@ It is an explanation of how the rules apply to what the model saw, not an offici
 
 ## Quick start
 
-You need Python 3.12, [`uv`](https://docs.astral.sh/uv/), Node.js, `ffmpeg` and a free [Gemini API key](https://aistudio.google.com/apikey).
+You need Python 3.12, [`uv`](https://docs.astral.sh/uv/), Node.js, `ffmpeg` and an API key from Gemini ([free tier](https://aistudio.google.com/apikey)), Anthropic or OpenAI. The command-line tools use Gemini by default; the web app accepts any of the three.
 
 Create your settings file, then put your key in it:
 

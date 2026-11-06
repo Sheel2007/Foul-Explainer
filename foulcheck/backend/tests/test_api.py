@@ -42,7 +42,7 @@ def upload(client, path, name="clip.mp4", context=None, key=None):
     with path.open("rb") as f:
         return client.post("/api/jobs", files={"file": (name, f, "video/mp4")},
                            data={"context": context} if context else {},
-                           headers={"X-Gemini-Api-Key": key} if key else {})
+                           headers={"X-Api-Key": key} if key else {})
 
 
 def wait_done(client, job_id, on_event=None):
@@ -213,3 +213,9 @@ def test_config_reports_server_key(monkeypatch):
     assert client.get("/api/config").json()["server_key"] is True
     monkeypatch.delenv("GEMINI_API_KEY")
     assert client.get("/api/config").json()["server_key"] is False
+
+
+def test_key_from_an_unknown_company_is_refused(video):
+    client = make_client(lambda *a: fake_ruling())
+    resp = upload(client, video, key="zz-not-a-provider-key-0123456789")
+    assert resp.status_code == 400 and "Gemini, Anthropic or OpenAI" in resp.json()["detail"]

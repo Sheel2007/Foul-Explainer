@@ -52,6 +52,9 @@ export default function UploadPanel({
   // Held in memory only, sent as a header with the upload. Never written to storage.
   const [apiKey, setApiKey] = useState("");
   const needsKey = serverKey === false;
+  const key = apiKey.trim();
+  const provider = key.startsWith("sk-ant-") ? "Anthropic" : key.startsWith("AIza") ? "Gemini" : key.startsWith("sk-") ? "OpenAI" : null;
+  const unknownKey = key.length > 5 && !provider;
   const [problem, setProblem] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
 
@@ -75,7 +78,7 @@ export default function UploadPanel({
       className="mx-auto w-full max-w-xl space-y-4"
       onSubmit={(e) => {
         e.preventDefault();
-        if (clip && (!needsKey || apiKey.trim())) onSubmit(clip, context, apiKey);
+        if (clip && !unknownKey && (!needsKey || key)) onSubmit(clip, context, apiKey);
       }}
     >
       <div
@@ -144,7 +147,7 @@ export default function UploadPanel({
 
       <label className="block">
         <span className="text-sm font-medium">
-          Your Gemini API key{needsKey ? "" : " (optional)"}
+          Your API key{needsKey ? "" : " (optional)"}
         </span>
         <input
           type="password"
@@ -152,14 +155,17 @@ export default function UploadPanel({
           onChange={(e) => setApiKey(e.target.value)}
           autoComplete="off"
           spellCheck={false}
-          placeholder="AIza…"
+          placeholder="Gemini, Anthropic or OpenAI key"
           className="mt-1.5 w-full rounded-xl border border-line bg-background px-3 py-2 font-mono text-sm outline-none focus:border-pitch focus:ring-2 focus:ring-pitch/20"
         />
-        <span className="text-xs text-muted">
-          Used for this analysis only and never saved, not even in your browser.{" "}
+        {provider && <span className="mt-1 block text-xs font-medium text-pitch">{provider} key</span>}
+        {unknownKey && <span className="mt-1 block text-xs text-red-500">That doesn&apos;t look like a Gemini, Anthropic or OpenAI key.</span>}
+        <span className="mt-1 block text-xs text-muted">
+          Works with Gemini, Anthropic or OpenAI. Your provider may charge you for the analysis. Used for this analysis only and never saved,
+          not even in your browser.{" "}
           {needsKey ? "" : "Leave it blank to use the server's key. "}
           <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" className="underline hover:text-foreground">
-            Get a free key
+            Get a free Gemini key
           </a>
           .
         </span>
@@ -173,7 +179,7 @@ export default function UploadPanel({
 
       <button
         type="submit"
-        disabled={!clip || (needsKey && !apiKey.trim())}
+        disabled={!clip || unknownKey || (needsKey && !key)}
         className="w-full rounded-xl bg-pitch px-4 py-3 font-semibold text-white transition hover:bg-pitch-dark disabled:cursor-not-allowed disabled:opacity-40"
       >
         Explain the call

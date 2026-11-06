@@ -58,6 +58,7 @@ EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5")
 # Video analysis. See "Video understanding" in the build plan for why fps matters so much.
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 CLAUDE_MODEL = os.environ.get("CLAUDE_MODEL", "claude-opus-5-5")
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-6-astra")
 LOCATE_FPS = 2
 INSPECT_FPS = 12
 INSPECT_HALF_WINDOW = 1.5  # seconds either side of the contact moment

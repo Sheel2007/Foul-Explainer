@@ -20,7 +20,7 @@ from foulcheck import config
 T = TypeVar("T")
 M = TypeVar("M", bound=BaseModel)
 
-TRANSIENT_STATUS = {408, 409, 429, 500, 502, 503, 504}
+TRANSIENT_STATUS = {408, 409, 429, 500, 502, 503, 504, 529}
 # On the free tier every request, failed or not, counts toward the daily quota, so server-side
 # failures (overload, timeouts) get few attempts and long gaps.
 SERVER_ERROR_ATTEMPTS = 3

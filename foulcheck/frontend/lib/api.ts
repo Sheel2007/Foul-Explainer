@@ -26,7 +26,7 @@ export async function createJob(file: File, context: string, apiKey?: string): P
   const form = new FormData();
   form.append("file", file);
   if (context.trim()) form.append("context", context.trim());
-  const headers: HeadersInit = apiKey?.trim() ? { "X-Gemini-Api-Key": apiKey.trim() } : {};
+  const headers: HeadersInit = apiKey?.trim() ? { "X-Api-Key": apiKey.trim() } : {};
   const res = await fetch(`${API_URL}/api/jobs`, { method: "POST", body: form, headers });
   if (!res.ok) throw new Error(await errorText(res));
   return res.json();

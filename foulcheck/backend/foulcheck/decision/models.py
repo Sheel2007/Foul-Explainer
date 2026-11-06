@@ -1,12 +1,13 @@
 """Text-only model backends for the decision step. They return raw JSON text."""
 
+import json
 import threading
 from typing import Protocol, TypeVar
 
 from pydantic import BaseModel
 
 from foulcheck import config, llm
-from foulcheck.clients import gemini_client
+from foulcheck.clients import anthropic_client, gemini_client, openai_client
 
 M = TypeVar("M", bound=BaseModel)
 
@@ -58,11 +59,9 @@ class ClaudeText:
         self._lock = threading.Lock()
 
     def generate(self, system: str, prompt: str, schema: type[M], sample: int = 0) -> str:
-        import anthropic
-
         with self._lock:
             if self._client is None:
-                self._client = anthropic.Anthropic(timeout=float(config.MODEL_TIMEOUT_S))
+                self._client = anthropic_client()
         resp = self._client.messages.parse(
             model=self.model,
             max_tokens=16000,
@@ -77,12 +76,37 @@ class ClaudeText:
         return resp.parsed_output.model_dump_json()
 
 
+class OpenAIText:
+    """Asks for JSON and leaves checking it to llm.generate_json. The two runs differ only by sampling."""
+
+    def __init__(self, model: str | None = None, client=None):
+        self.model = model or config.OPENAI_MODEL
+        self.name = self.model
+        self._client = client
+        self._lock = threading.Lock()
+
+    def generate(self, system: str, prompt: str, schema: type[M], sample: int = 0) -> str:
+        with self._lock:
+            if self._client is None:
+                self._client = openai_client()
+        resp = self._client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "system", "content": f"{system}\n\nReply with JSON matching this schema:\n{json.dumps(schema.model_json_schema())}"},
+                      {"role": "user", "content": prompt}],
+            response_format={"type": "json_object"},
+        )
+        return resp.choices[0].message.content
+
+
 def make_text_model(provider: str | None = None, model: str | None = None, api_key: str | None = None) -> TextModel:
-    """`api_key` is a Gemini key for this model only (e.g. a visitor's); None uses the server's."""
+    """`api_key` is that provider's key for this model only (e.g. a visitor's); None uses the server's."""
     provider = provider or config.DECISION_PROVIDER
-    model = model or config.DECISION_MODEL
+    if provider == config.DECISION_PROVIDER:
+        model = model or config.DECISION_MODEL  # DECISION_MODEL belongs to the configured provider only
     if provider == "gemini":
-        return GeminiText(model, client=gemini_client(api_key) if api_key else None)
+        return GeminiText(model or "gemini-3.6-flash", client=gemini_client(api_key) if api_key else None)
     if provider == "claude":
-        return ClaudeText(model)
+        return ClaudeText(model, client=anthropic_client(api_key) if api_key else None)
+    if provider == "openai":
+        return OpenAIText(model, client=openai_client(api_key) if api_key else None)
     raise ValueError(f"unknown decision provider {provider!r}")

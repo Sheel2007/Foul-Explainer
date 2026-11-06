@@ -8,7 +8,7 @@ export default function UploadUnavailable({ embedded = false }: { embedded?: boo
       <Title className="text-3xl font-semibold tracking-tight">Run it on your own clip</Title>
       <p className="mt-3 max-w-xl text-muted">
         This demo shows saved results. Analysing a new clip needs the video server, which isn&apos;t hosted here, but you can run the whole
-        tool on your own computer with a free Gemini key.
+        tool on your own computer with your own Gemini, Anthropic or OpenAI key.
       </p>
       <a
         href={REPO_URL}
