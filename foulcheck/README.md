@@ -50,7 +50,7 @@ Open http://localhost:3000, drop in a clip (MP4, MOV or WebM, up to 60 s), and w
   uv run python -m foulcheck.explain.examples
   ```
 
-  The videos stay out of git (broadcast footage), so a fresh clone shows these sections without video until you add your own clips, run them and export.
+  The silent copies the site shows are committed in `frontend/public/examples`. The source clips in `eval/clips/` are not, so re-exporting on a fresh clone needs your own clips.
 
 - The page shows the call, the explanation and the highlighted rules next to your clip.
 - **Download the explained video** gives you the clip with the panel beside it.

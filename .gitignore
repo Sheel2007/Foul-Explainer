@@ -22,7 +22,6 @@ foulcheck/backend/data/laws/
 # Broadcast footage and anything cut from it
 foulcheck/eval/clips/
 foulcheck/explained/
-foulcheck/frontend/public/examples/
 
 # Runtime data
 foulcheck/logs/

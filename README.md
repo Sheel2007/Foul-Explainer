@@ -48,13 +48,19 @@ cd foulcheck/frontend && npm install && npm run dev
 
 Open http://localhost:3000. The full guide, including the command-line pipeline and the optional referee guidance download, is in [`foulcheck/README.md`](foulcheck/README.md).
 
+## Hosting the site
+
+The site runs on Vercel and redeploys on every push, with **Root Directory** set to `foulcheck/frontend`. The example clips and frames are committed in `foulcheck/frontend/public/examples`, so a build from GitHub has everything it needs.
+
+The backend isn't hosted, so the upload tool is replaced by a link here. To analyse your own clips, clone the repo and run it locally.
+
 ## What is not in git
 
 These stay on your machine, so a fresh clone needs them added or rebuilt:
 
 - **API keys:** `foulcheck/.env` only.
 - **Rule text:** the Laws PDF, the saved referee guidance pages, and the parsed rulebook built from them. `foulcheck.laws.build` downloads the PDF and rebuilds the rulebook. Short rule quotes in `foulcheck/frontend/data/examples.json` are the exception.
-- **Footage:** test clips, explained videos and the site's example videos. The answer-key labels and the results text in `foulcheck/frontend/data/examples.json` are committed; the videos are not.
+- **Footage:** the source test clips and full explained videos. The silent copies the site shows are committed in `foulcheck/frontend/public/examples`, so re-running your own clips means adding your own source clips first.
 
 ## Tests
 
