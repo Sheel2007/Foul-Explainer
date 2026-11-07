@@ -29,7 +29,7 @@ TITLES = {
     "1": "Liverpool v Real Madrid · shot hits the arm",
     "2": "England v Mexico · slide on the touchline",
     "3": "Arsenal · sliding tackle in midfield",
-    "4": "Youth league · trip near the box",
+    "4": "Real Madrid v Man City · referee gave a red",
     "5": "Anderlecht v Oostende · trip in the box",
 }
 

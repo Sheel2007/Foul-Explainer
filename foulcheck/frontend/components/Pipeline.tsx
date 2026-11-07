@@ -6,51 +6,39 @@ import { Quote } from "./RulePanel";
 
 type Stop = { title: string; caption: string; visual: React.ReactNode };
 
-/** A labelled arrow between two stops: right on wide screens, down on phones. */
+/** One step on the phone layout: a line of text, and its picture or result at thumbnail size. */
+type PhoneStep = { title: string; short: string; result: React.ReactNode };
+
+function PhoneSteps({ steps, first, last }: { steps: PhoneStep[]; first: number; last?: boolean }) {
+  return (
+    <ol>
+      {steps.map((s, i) => (
+        <li key={s.title} className="relative grid grid-cols-[1.125rem_1fr_3.75rem] items-center gap-2 py-0.5">
+          {(i < steps.length - 1 || !last) && <span aria-hidden className="absolute bottom-0 left-[8px] top-1/2 h-full w-0.5 bg-pitch/40" />}
+          <span className="relative grid h-[18px] w-[18px] place-items-center rounded-full bg-pitch text-[10px] font-bold text-black">{first + i}</span>
+          <span className="min-w-0 leading-tight">
+            <span className="block text-[13px] font-semibold">{s.title}</span>
+            <span className="block truncate text-[11px] text-muted">{s.short}</span>
+          </span>
+          <span className="relative block h-[34px] overflow-hidden rounded bg-surface font-mono text-[10px] ring-1 ring-line">{s.result}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function Value({ children }: { children: React.ReactNode }) {
+  return <span className="grid h-full place-items-center text-center font-semibold leading-none">{children}</span>;
+}
+
+/** A labelled arrow between two stops. */
 function Arrow({ label }: { label: string }) {
   return (
-    <div
-      className="flex items-center justify-center gap-2 py-3 md:flex-col md:gap-1 md:px-1 md:pt-0 md:pb-14"
-      aria-hidden
-    >
-      {/* down on phones */}
-      <svg viewBox="0 0 20 44" className="h-11 w-5 text-pitch md:hidden">
-        <path
-          d="M10 2 C 4 14, 16 26, 10 38"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M4 32 10 40 16 32"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <span className="whitespace-nowrap font-mono text-[11px] text-muted md:order-first">
-        {label}
-      </span>
-      {/* right on wide screens */}
-      <svg viewBox="0 0 64 20" className="hidden h-5 w-16 text-pitch md:block">
-        <path
-          d="M2 12 C 18 4, 40 4, 56 10"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M49 4 58 10.5 48 15"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+    <div className="flex flex-col items-center justify-center gap-1 px-1 pb-14" aria-hidden>
+      <span className="whitespace-nowrap font-mono text-[11px] text-muted">{label}</span>
+      <svg viewBox="0 0 64 20" className="h-5 w-16 text-pitch">
+        <path d="M2 12 C 18 4, 40 4, 56 10" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M49 4 58 10.5 48 15" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
   );
@@ -85,7 +73,7 @@ function Row({
   first: number;
 }) {
   return (
-    <div className="grid md:grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
+    <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr]">
       {stops.map((stop, i) => (
         <Fragment key={stop.title}>
           {i > 0 && <Arrow label={labels[i - 1]} />}
@@ -153,6 +141,31 @@ export default function Pipeline({ ex }: { ex: Example }) {
     ["Second run disagreed", points(/disagreed/)],
     ...(hinge ? [["Card rests on one reading", hinge] as const] : []),
     ...(other ? [["Other checks", other] as const] : []),
+  ];
+
+  const thumb = (src: string, box?: boolean) => (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" className="h-full w-full object-cover" />
+      {box && (
+        <span
+          className="absolute border border-red-500"
+          style={{ left: `${xmin}%`, top: `${ymin}%`, width: `${xmax - xmin}%`, height: `${ymax - ymin}%` }}
+        />
+      )}
+    </>
+  );
+  const phoneWatch: PhoneStep[] = [
+    { title: "Your clip", short: "One incident, any angle", result: thumb(ex.poster) },
+    { title: "Find the moment", short: "Picks the clearest angle", result: thumb(chosen ? nearest(chosen.seconds) : st.contact) },
+    { title: "Record the facts", short: "Only what it sees, no rulings", result: thumb(st.contact, true) },
+    { title: "Zoom in on the boots", short: "Enlarged to see studs", result: thumb(st.closeup ?? st.contact) },
+  ];
+  const phoneDecide: PhoneStep[] = [
+    { title: "Look up the rule", short: "Laws plus league guidance", result: <Value>10 rules</Value> },
+    { title: "Decide, twice", short: "Never sees the video", result: <Value>{agreed ? "Agree ✓" : "Differ"}</Value> },
+    { title: "Check every quote", short: "Must match word for word", result: <Value>{verified}/{verified} ✓</Value> },
+    { title: "Score confidence", short: "Points off for any doubt", result: <Value>{Math.round(conf.score * 100)}%</Value> },
   ];
 
   const watch: Stop[] = [
@@ -382,60 +395,55 @@ export default function Pipeline({ ex }: { ex: Example }) {
   ];
 
   return (
-    <section id="how" className="scroll-mt-16 py-24">
+    <section id="how" className="scroll-mt-14 py-3 md:scroll-mt-16 md:py-24">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        <p className="text-sm font-medium text-pitch">Under the hood</p>
-        <h2 className="mt-1 max-w-3xl text-3xl font-semibold tracking-tight sm:text-4xl">
-          From a clip to a call, step by step.
+        <p className="hidden text-sm font-medium text-pitch md:block">Under the hood</p>
+        <h2 className="max-w-3xl text-xl font-semibold tracking-tight md:mt-1 md:text-4xl">
+          From a clip to a call<span className="hidden md:inline">, step by step</span>.
         </h2>
-        <p className="mt-3 max-w-2xl text-muted">
-          Everything below is what the tool actually produced for the tackle
-          above. The model that watches never makes the call, and the one that
-          makes the call never sees the video.
+        <p className="mt-0.5 max-w-2xl text-xs leading-snug text-muted md:mt-3 md:text-base md:leading-normal">
+          <span className="hidden md:inline">Everything below is what the tool actually produced for the tackle above. </span>
+          The model that watches never makes the call, and the one that makes the call never sees the video.
         </p>
 
-        <p className="mt-12 font-mono text-xs uppercase tracking-wider text-muted">
-          Watching · video model
-        </p>
-        <div className="mt-4">
-          <Row
-            stops={watch}
-            labels={["skim 2 fps", "12 fps at contact", "crop + enlarge"]}
-            first={1}
-          />
-        </div>
-
-        {/* hand-off: the video stops here */}
-        <div className="relative my-6 md:my-2 md:h-24" aria-hidden>
-          <svg
-            viewBox="0 0 1000 96"
-            preserveAspectRatio="none"
-            className="absolute inset-0 hidden h-full w-full text-pitch md:block"
-          >
-            <path
-              d="M880 4 C 880 60, 820 48, 500 48 S 120 40, 120 92"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.2"
-              strokeDasharray="6 6"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-          <p className="relative mx-auto w-fit rounded-full bg-background px-4 py-1.5 text-center text-sm ring-1 ring-line md:top-1/2 md:-translate-y-1/2">
-            <b>Only the facts go on.</b>{" "}
-            <span className="text-muted">The video stops here.</span>
+        {/* phones and small tablets: every step on one screen */}
+        <div className="mt-2 md:hidden">
+          <p className="mb-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">Watching · video model</p>
+          <PhoneSteps steps={phoneWatch} first={1} />
+          <p className="relative my-1 rounded-full bg-surface py-0.5 text-center text-[11px] ring-1 ring-line">
+            <b>Only the facts go on.</b> <span className="text-muted">The video stops here.</span>
           </p>
+          <p className="mb-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">Deciding · language model</p>
+          <PhoneSteps steps={phoneDecide} first={5} last />
         </div>
 
-        <p className="font-mono text-xs uppercase tracking-wider text-muted">
-          Deciding · language model
-        </p>
-        <div className="mt-4">
-          <Row
-            stops={decide}
-            labels={["10 best passages", "2 drafts", "verified"]}
-            first={5}
-          />
+        <div className="hidden md:block">
+          <p className="mt-12 font-mono text-xs uppercase tracking-wider text-muted">Watching · video model</p>
+          <div className="mt-4">
+            <Row stops={watch} labels={["skim 2 fps", "12 fps at contact", "crop + enlarge"]} first={1} />
+          </div>
+
+          {/* hand-off: the video stops here */}
+          <div className="relative my-2 h-24" aria-hidden>
+            <svg viewBox="0 0 1000 96" preserveAspectRatio="none" className="absolute inset-0 h-full w-full text-pitch">
+              <path
+                d="M880 4 C 880 60, 820 48, 500 48 S 120 40, 120 92"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeDasharray="6 6"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+            <p className="relative top-1/2 mx-auto w-fit -translate-y-1/2 rounded-full bg-background px-4 py-1.5 text-center text-sm ring-1 ring-line">
+              <b>Only the facts go on.</b> <span className="text-muted">The video stops here.</span>
+            </p>
+          </div>
+
+          <p className="font-mono text-xs uppercase tracking-wider text-muted">Deciding · language model</p>
+          <div className="mt-4">
+            <Row stops={decide} labels={["10 best passages", "2 drafts", "verified"]} first={5} />
+          </div>
         </div>
       </div>
     </section>

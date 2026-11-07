@@ -405,39 +405,33 @@
   },
   {
     "id": "4",
-    "title": "Youth league \u00b7 trip near the box",
-    "video_model": "gemini-3.8-flash",
+    "title": "Real Madrid v Man City \u00b7 referee gave a red",
+    "video_model": "gemini-3.6-flash",
     "video": "/examples/4_clip.mp4",
     "poster": "/examples/4_poster.jpg",
     "ai": {
       "verdict": "foul",
       "restart": "direct_free_kick",
       "card": "none",
-      "offence_type": "careless tackle",
-      "confidence": "Medium",
-      "explanation": "Dark Blue Defender lunges in from behind and to the side with an extended leg, missing the ball and tripping White 13 as he dribbles through midfield. Because physical contact is made during a mistimed sliding tackle, the referee awards a direct free kick to the white team outside the penalty area. The tackle is made with medium force without clear evidence of endangering the opponent's safety, classifying it as a careless foul. Consequently, no disciplinary card is required for this challenge.",
-      "key_moment": "00:10.0",
+      "offence_type": "careless trip",
+      "confidence": "High",
+      "explanation": "The defender clips the back of the attacker's heel from behind while tracking them outside the penalty area, causing the attacker to trip and fall. Because the challenge lacked high speed, lunging, or raised studs, it is classed as a mistimed, careless trip rather than a reckless foul. Play must restart with a direct free kick for the attacking team at the spot where the contact occurred. No yellow or red card is required for a standard careless foul.",
+      "key_moment": "00:04.1",
       "confidence_detail": {
-        "model_score": 0.85,
-        "score": 0.65,
-        "adjustments": [
-          "-0.20: a second independent run disagreed on card (none vs yellow)"
-        ]
+        "model_score": 0.95,
+        "score": 0.95,
+        "adjustments": []
       },
       "gray_areas": [
-        "Whether the tackle was reckless rather than careless: because whether studs were showing is uncertain from the footage, a referee might view the extended lunge from behind as reckless disregard for the opponent, which would warrant a yellow card.",
-        "A second reading of the same facts came out as foul, direct free kick, yellow card."
+        "Whether the tackle stopped a promising attack depending on the positions of other defenders, which would elevate the sanction to a yellow card."
       ],
-      "uncertain_fields": [
-        "challenge.studs_showing",
-        "body_part_used"
-      ],
+      "uncertain_fields": [],
       "citations": [
         {
           "section": "12.1",
           "title": "Direct free kick",
-          "quote": "A direct free kick is awarded if a player commits any of the following offences against an opponent in a manner considered by the referee to be careless, reckless or using excessive force:... tackles or challenges... trips or attempts to trip",
-          "highlight": "tackles or challenges",
+          "quote": "A direct free kick is awarded if a player commits any of the following offences against an opponent in a manner considered by the referee to be careless, reckless or using excessive force:... trips or attempts to trip",
+          "highlight": "trips or attempts to trip",
           "source_url": "https://downloads.theifab.com/downloads/laws-of-the-game-202627-double-pages?l=en#page=58",
           "kind": "law"
         },
@@ -460,46 +454,46 @@
       ]
     },
     "facts": {
-      "challenge_type": "sliding tackle",
-      "body_part_used": "shin",
-      "body_part_hit": "leg",
+      "challenge_type": "trip",
+      "body_part_used": "front of boot",
+      "body_part_hit": "heel",
       "ball_played_first": false,
       "speed_and_force": "medium",
       "location": "outside penalty area",
-      "boot_detail": "The defender lunges in with an extended right leg from behind and to the side, contacting the attacker's lower leg on the follow-through.",
+      "boot_detail": "The white boot catches the back of the opponent's heel from behind as they run.",
       "handball": {
         "touched": false,
         "arm_position": null,
         "deliberate_movement": null
       },
       "studs_showing": false,
-      "leg_straight": true,
-      "lunge": true,
-      "follow_through": true
+      "leg_straight": false,
+      "lunge": false,
+      "follow_through": false
     },
     "story": null,
     "moment": {
-      "contact_seconds": 10.0,
+      "contact_seconds": 4.1,
       "contact_box": [
-        540.0,
-        440.0,
-        635.0,
-        505.0
+        550.0,
+        20.0,
+        820.0,
+        220.0
       ],
       "views": [
         {
-          "seconds": 5.1,
+          "seconds": 1.8,
           "kind": "live",
           "slow_motion": false,
-          "camera": "elevated main camera",
-          "clarity": "clear",
+          "camera": "wide main camera",
+          "clarity": "partial",
           "chosen": false
         },
         {
-          "seconds": 9.4,
+          "seconds": 4.3,
           "kind": "replay",
-          "slow_motion": false,
-          "camera": "pitch-level sideline camera",
+          "slow_motion": true,
+          "camera": "tracking side camera",
           "clarity": "clear",
           "chosen": true
         }
@@ -509,13 +503,14 @@
         "guard_errors": 0,
         "reran": false,
         "enforced": 0,
-        "second_opinion": "disagree",
-        "decision_s": 19.06
+        "second_opinion": "agree",
+        "decision_model": "gemini-3.6-flash",
+        "decision_s": 56.99
       }
     },
     "label": {
-      "verdict": "foul",
-      "restart": "direct_free_kick",
+      "verdict": "no_foul",
+      "restart": "play_on",
       "card": "none"
     }
   },

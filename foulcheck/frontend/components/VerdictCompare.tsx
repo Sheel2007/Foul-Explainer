@@ -17,7 +17,8 @@ const VAR_TODAY = [
 ];
 
 // Column positions shared by both sides: the verdict band, then three rows that line up across the handle.
-const ROWS = "absolute bottom-2 top-[43%] grid grid-rows-3 gap-1 sm:bottom-3 sm:top-[32%]";
+// On phones the frame takes the page's width and the rows sit under it at a fixed height, so wider phones don't stretch them apart.
+const ROWS = "absolute bottom-1 top-[calc((100vw-2rem)*0.5625)] grid grid-rows-3 sm:bottom-3 sm:top-[32%] sm:gap-1";
 
 /**
  * The hero visual: one frame under a drag handle. Left is what the stadium is told and VAR's three
@@ -59,7 +60,7 @@ export default function VerdictCompare({ ex }: { ex: Example }) {
 
   return (
     <figure className="min-w-0">
-      <div className="relative aspect-[3/4] select-none overflow-hidden rounded-xl bg-[#0d110f] ring-1 ring-white/15 sm:aspect-video">
+      <div className="relative h-[calc((100vw-2rem)*0.5625+10rem)] select-none overflow-hidden rounded-xl bg-[#0d110f] ring-1 ring-white/15 sm:aspect-video sm:h-auto">
         {/* right side: Foul Explainer */}
         <div className="absolute inset-0">
           <div className="absolute inset-x-0 top-0 aspect-video overflow-hidden">
@@ -83,12 +84,15 @@ export default function VerdictCompare({ ex }: { ex: Example }) {
               ))}
             </svg>
           </div>
-          <p className="absolute left-[60%] right-3 top-[12%] text-base font-bold leading-tight sm:left-[62%] sm:top-[15%] sm:text-2xl">{card}</p>
+          <p className="absolute left-[60%] right-3 top-[11%] text-base font-bold leading-tight sm:left-[62%] sm:top-[15%] sm:text-2xl">{card}</p>
           <div className={`${ROWS} left-[42%] right-3 text-white sm:left-[62%]`}>
             <Answer name="The reason">
               {quote?.quote ? (
-                <span className="line-clamp-4 italic sm:line-clamp-3">
-                  “<Quote text={quote.quote} highlight={quote.highlight} />”
+                <span className="line-clamp-3 italic">
+                  <span className="sm:hidden">“{quote.highlight ?? quote.quote}”</span>
+                  <span className="hidden sm:inline">
+                    “<Quote text={quote.quote} highlight={quote.highlight} />”
+                  </span>
                 </span>
               ) : (
                 <span className="line-clamp-3">{ex.ai.explanation}</span>
@@ -121,12 +125,12 @@ export default function VerdictCompare({ ex }: { ex: Example }) {
           </div>
           <div className={`${ROWS} left-3 w-[33%] text-white sm:left-4`}>
             {VAR_TODAY.map(([name, text]) => (
-              <div key={name} className="self-center text-[11px] leading-snug sm:text-[13px]">
+              <div key={name} className="self-center text-[10.5px] leading-tight sm:text-[13px] sm:leading-snug">
                 <p className="font-semibold">
                   <span className="mr-1 text-red-400">✗</span>
                   {name}
                 </p>
-                <p className="mt-0.5 text-white/70">{text}</p>
+                <p className="text-white/70 sm:mt-0.5">{text}</p>
               </div>
             ))}
           </div>
@@ -152,19 +156,19 @@ export default function VerdictCompare({ ex }: { ex: Example }) {
           className="absolute inset-0 h-full w-full cursor-ew-resize touch-pan-y opacity-0"
         />
       </div>
-      <figcaption className="mt-2 text-xs text-white/60">One real tackle, {ex.title.split(" · ")[0]}. Drag to compare.</figcaption>
+      <figcaption className="mt-1 text-xs text-white/60 sm:mt-2">One real tackle, {ex.title.split(" · ")[0]}. Drag to compare.</figcaption>
     </figure>
   );
 }
 
 function Answer({ name, children }: { name: string; children: React.ReactNode }) {
   return (
-    <div className="self-center text-[11px] leading-snug sm:text-[13px]">
+    <div className="self-center text-[10.5px] leading-tight sm:text-[13px] sm:leading-snug">
       <p className="font-semibold">
         <span className="mr-1 text-green-300">✓</span>
         {name}
       </p>
-      <div className="mt-0.5 text-white/90">{children}</div>
+      <div className="text-white/90 sm:mt-0.5">{children}</div>
     </div>
   );
 }

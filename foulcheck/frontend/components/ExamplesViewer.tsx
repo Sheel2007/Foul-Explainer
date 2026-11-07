@@ -24,11 +24,6 @@ function Fact({ label, value }: { label: string; value: string | null }) {
   );
 }
 
-function Mark({ ok }: { ok: boolean | null }) {
-  if (ok === null) return null;
-  return <span className={ok ? "text-pitch" : "text-red-500"}>{ok ? " ✓" : " ✗"}</span>;
-}
-
 /** The test clips: video on the left, and beside it a panel the same height with the call and tabs for the detail. */
 export default function ExamplesViewer({ examples }: { examples: Example[] }) {
   const [i, setI] = useState(0);
@@ -45,17 +40,18 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
   const detail = ex.ai.confidence_detail;
   // say so when a clip was watched by a different video model from the rest
   const usual = examples.filter((e) => e.video_model === ex.video_model).length > examples.length / 2;
-  const is = (k: "verdict" | "restart" | "card") => (label?.[k] ? ex.ai[k] === label[k] : null);
+  const missed = (["verdict", "restart", "card"] as const).filter((k) => label?.[k] && ex.ai[k] !== label[k]);
+  const missedNames = missed.map((k) => (k === "verdict" ? "call" : k)).join(" and ");
 
   return (
-    <section id="examples" className="scroll-mt-16 border-t border-line py-20">
+    <section id="examples" className="scroll-mt-16 border-t border-line py-6 sm:py-20">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        <div className="flex flex-wrap items-end justify-between gap-6">
+        <div className="flex flex-wrap items-end justify-between gap-1 sm:gap-6">
           <div>
             <p className="text-sm font-medium text-pitch">See it work</p>
-            <h2 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">{examples.length} real incidents, judged</h2>
-            <p className="mt-3 max-w-xl text-muted">
-              Pick a clip. Beside it: the call, why, the rule it used, how sure it was, and whether it matched the answer key.
+            <h2 className="mt-0.5 text-2xl font-semibold tracking-tight sm:text-4xl">{examples.length} real incidents, judged</h2>
+            <p className="mt-1.5 max-w-xl text-sm text-muted sm:mt-3 sm:text-base">
+              Pick a clip. Beside it: the call, why, the rule it used, how sure it was, and whether it got it right.
             </p>
           </div>
           <p className="text-sm text-muted">
@@ -64,7 +60,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
           </p>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+        <div className="mt-3 grid gap-3 sm:mt-8 sm:gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
           {/* left: the clip and the clip picker */}
           <div className="space-y-3">
             <video
@@ -80,7 +76,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
             />
             <div role="tablist" aria-label="Test clips" className="grid grid-cols-5 gap-2">
               {examples.map((e, n) => {
-                const ok = e.ai.card === e.label?.card;
+                const ok = e.ai.verdict === e.label?.verdict && e.ai.card === e.label?.card;
                 return (
                   <button
                     key={e.id}
@@ -99,7 +95,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
                         )}
                         <span className="hidden sm:inline">{e.ai.card === "none" ? "No card" : e.ai.card === "red" ? "Red" : "Yellow"}</span>
                       </span>
-                      {e.label?.card && <span className={ok ? "text-green-300" : "text-red-400"}>{ok ? "✓" : "✗"}</span>}
+                      {e.label && <span className={ok ? "text-green-300" : "text-red-400"}>{ok ? "✓" : "✗"}</span>}
                     </span>
                   </button>
                 );
@@ -110,11 +106,11 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
           {/* right: same height as the left column on wide screens; the tab body scrolls if it must */}
           <div className="lg:relative">
             <div className="flex flex-col overflow-hidden rounded-2xl border border-line bg-surface lg:absolute lg:inset-0">
-              <div className="border-b border-line p-5">
+              <div className="border-b border-line p-3 sm:p-5">
                 <p className="text-xs text-muted">{ex.title}</p>
                 {!usual && ex.video_model && (
                   <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
-                    Watched by {ex.video_model}, not the model used for the other clips, because that model was overloaded.
+                    Watched by {ex.video_model}, not the model used for most clips, because that model was overloaded.
                   </p>
                 )}
                 <div className="mt-1 flex items-start gap-3">
@@ -132,14 +128,18 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
                     <span aria-hidden className={`h-10 w-7 shrink-0 rotate-6 rounded-md shadow ${ex.ai.card === "yellow" ? "bg-yellow-400" : "bg-red-600"}`} />
                   )}
                 </div>
-                {!label && <p className="mt-3 text-xs text-muted">No answer key: the right call on this one is debatable.</p>}
+                {!label && <p className="mt-1.5 text-xs text-muted sm:mt-3">No answer key: the right call on this one is debatable.</p>}
                 {label && (
-                  <p className="mt-3 text-xs text-muted">
-                    Answer key: {label.verdict ? VERDICT_LABEL[label.verdict] : "–"}
-                    <Mark ok={is("verdict")} /> · {label.restart ? RESTART_LABEL[label.restart] : "–"}
-                    <Mark ok={is("restart")} /> · {label.card ? CARD[label.card] : "–"}
-                    <Mark ok={is("card")} />
-                  </p>
+                  <div className="mt-1.5 text-xs sm:mt-3">
+                    <p className="text-muted">
+                      Correct answer: <b className="font-medium text-foreground">
+                        {[label.verdict && VERDICT_LABEL[label.verdict], label.restart && RESTART_LABEL[label.restart], label.card && CARD[label.card]].filter(Boolean).join(" · ")}
+                      </b>
+                    </p>
+                    <p className={`mt-0.5 ${missed.length ? "text-red-500" : "text-pitch"}`}>
+                      {missed.length ? `✗ The tool got the ${missedNames} wrong` : "✓ The tool matched this"}
+                    </p>
+                  </div>
                 )}
               </div>
 
@@ -150,7 +150,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
                     role="tab"
                     aria-selected={tab === t}
                     onClick={() => setTab(t)}
-                    className={`-mb-px whitespace-nowrap border-b-2 px-3 py-2.5 text-sm transition ${tab === t ? "border-pitch font-medium text-foreground" : "border-transparent text-muted hover:text-foreground"}`}
+                    className={`-mb-px whitespace-nowrap border-b-2 px-2 sm:px-3 py-2 text-sm transition ${tab === t ? "border-pitch font-medium text-foreground" : "border-transparent text-muted hover:text-foreground"}`}
                   >
                     {t}
                     {t === "How sure" && (
@@ -162,7 +162,7 @@ export default function ExamplesViewer({ examples }: { examples: Example[] }) {
                 ))}
               </div>
 
-              <div role="tabpanel" className="min-h-0 flex-1 overflow-y-auto p-5">
+              <div role="tabpanel" className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-5">
                 {tab === "Why" && <p className="text-sm leading-relaxed">{ex.ai.explanation}</p>}
 
                 {tab === "The rule" && (

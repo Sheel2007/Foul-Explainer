@@ -19,18 +19,18 @@ export default function Home() {
   return (
     <>
       <section className="on-dark bg-[#070a08] text-white">
-        <div className="mx-auto grid min-h-[calc(100svh-57px)] w-full max-w-6xl items-center gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-4 px-4 py-4 sm:min-h-[calc(100svh-57px)] sm:gap-8 sm:px-6 sm:py-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-10">
           <div>
-            <h1 className="text-4xl font-semibold leading-[1.04] tracking-tight sm:text-5xl lg:text-[2.6rem]">
+            <h1 className="text-[1.55rem] font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:text-[2.6rem]">
               VAR tells you what.
-              <span className="mt-1 block text-green-300">Foul Explainer shows you why.</span>
+              <span className="block text-green-300 sm:mt-1">Foul Explainer shows you why.</span>
             </h1>
-            <p className="mt-4 max-w-md text-lg leading-relaxed text-white/70">An AI explanation of any tackle or handball clip.</p>
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <a href="#how" className="rounded-lg bg-white px-5 py-3 text-sm font-semibold text-black hover:bg-white/90">
+            <p className="mt-1.5 max-w-md text-sm text-white/70 sm:mt-4 sm:text-lg sm:leading-relaxed">An AI explanation of any tackle or handball clip.</p>
+            <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-6 sm:gap-3">
+              <a href="#how" className="rounded-lg bg-white px-3.5 py-2 text-sm font-semibold text-black hover:bg-white/90 sm:px-5 sm:py-3">
                 See how it works
               </a>
-              <a href="#try" className="rounded-lg px-5 py-3 text-sm font-semibold ring-1 ring-white/25 hover:bg-white/10">
+              <a href="#try" className="rounded-lg px-3.5 py-2 text-sm font-semibold ring-1 ring-white/25 hover:bg-white/10 sm:px-5 sm:py-3">
                 {HAS_ANALYSIS_SERVER ? "Try your own clip" : "Run it on your own clip"}
               </a>
             </div>

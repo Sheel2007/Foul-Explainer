@@ -82,14 +82,14 @@ export default function FoulExplainer({ embedded = false }: { embedded?: boolean
   const Title = embedded ? "h2" : "h1";
 
   return (
-    <div ref={root} className={`mx-auto w-full max-w-6xl scroll-mt-16 px-4 sm:px-6 ${embedded ? "py-20" : "py-8"}`}>
-      <header className="mb-8 flex items-center gap-3">
+    <div ref={root} className={`mx-auto w-full max-w-6xl scroll-mt-16 px-4 sm:px-6 ${embedded ? "py-6 sm:py-20" : "py-6 sm:py-8"}`}>
+      <header className="mb-3 flex items-center gap-3 sm:mb-8">
         <div className="mr-auto">
           {embedded && phase === "idle" && <p className="text-sm font-medium text-pitch">Your turn</p>}
-          <Title className={`font-semibold tracking-tight ${embedded ? "mt-1 text-3xl sm:text-4xl" : "text-2xl"}`}>
+          <Title className={`font-semibold tracking-tight ${embedded ? "mt-0.5 text-2xl sm:text-4xl" : "text-2xl"}`}>
             {phase !== "idle" ? clip?.file.name : embedded ? "Try it on your own clip" : "Upload a clip"}
           </Title>
-          <p className={`text-muted ${embedded ? "mt-3" : "text-sm"}`}>
+          <p className={`text-sm text-muted ${embedded ? "mt-1.5 sm:mt-3 sm:text-base" : ""}`}>
             {embedded && phase === "idle"
               ? "One incident, 5 to 30 seconds. You need your own API key from Gemini, Anthropic or OpenAI; it's used for this analysis only and never saved."
               : "See how the Laws of the Game apply to it."}
