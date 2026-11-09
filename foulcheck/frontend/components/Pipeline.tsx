@@ -6,29 +6,57 @@ import { Quote } from "./RulePanel";
 
 type Stop = { title: string; caption: string; visual: React.ReactNode };
 
-/** One step on the phone layout: a line of text, and its picture or result at thumbnail size. */
-type PhoneStep = { title: string; short: string; result: React.ReactNode };
+/** The phone version of the timeline: the same steps as small cards, two to a row, joined by arrows. */
+type PhoneStop = { title: string; visual: React.ReactNode };
 
-function PhoneSteps({ steps, first, last }: { steps: PhoneStep[]; first: number; last?: boolean }) {
+function PhoneArrowRight() {
   return (
-    <ol>
-      {steps.map((s, i) => (
-        <li key={s.title} className="relative grid grid-cols-[1.125rem_1fr_3.75rem] items-center gap-2 py-0.5">
-          {(i < steps.length - 1 || !last) && <span aria-hidden className="absolute bottom-0 left-[8px] top-1/2 h-full w-0.5 bg-pitch/40" />}
-          <span className="relative grid h-[18px] w-[18px] place-items-center rounded-full bg-pitch text-[10px] font-bold text-black">{first + i}</span>
-          <span className="min-w-0 leading-tight">
-            <span className="block text-[13px] font-semibold">{s.title}</span>
-            <span className="block truncate text-[11px] text-muted">{s.short}</span>
-          </span>
-          <span className="relative block h-[34px] overflow-hidden rounded bg-surface font-mono text-[10px] ring-1 ring-line">{s.result}</span>
-        </li>
-      ))}
-    </ol>
+    <svg viewBox="0 0 14 10" className="mt-[calc((50vw-1.25rem)*0.25-0.3rem)] h-2.5 w-3.5 self-start text-pitch" aria-hidden>
+      <path d="M1 5h10M8 1.5 12 5 8 8.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
-function Value({ children }: { children: React.ReactNode }) {
-  return <span className="grid h-full place-items-center text-center font-semibold leading-none">{children}</span>;
+/** From the end of one row back to the start of the next, like the desktop's hand-off curve. */
+function PhoneTurn({ dashed, label }: { dashed?: boolean; label?: React.ReactNode }) {
+  return (
+    <div className={`relative ${label ? "my-0.5 h-7" : "h-5"}`} aria-hidden={!label}>
+      <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="absolute inset-0 h-full w-full text-pitch">
+        <path
+          d="M76 1 C 76 12, 70 10, 50 10 S 24 8, 24 19"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeDasharray={dashed ? "3 3" : undefined}
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      {label && (
+        <p className="relative top-1/2 mx-auto w-fit -translate-y-1/2 rounded-full bg-background px-2.5 py-0.5 text-[10.5px] ring-1 ring-line">
+          {label}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PhoneRow({ stops, first }: { stops: PhoneStop[]; first: number }) {
+  const card = (stop: PhoneStop, n: number) => (
+    <figure className="min-w-0">
+      <div className="relative aspect-[2/1] overflow-hidden rounded-lg bg-surface ring-1 ring-line">{stop.visual}</div>
+      <figcaption className="mt-0.5 truncate text-[12px] font-semibold leading-tight">
+        <span className="mr-1 text-pitch">{n}</span>
+        {stop.title}
+      </figcaption>
+    </figure>
+  );
+  return (
+    <div className="grid grid-cols-[1fr_auto_1fr] gap-x-1">
+      {card(stops[0], first)}
+      <PhoneArrowRight />
+      {card(stops[1], first + 1)}
+    </div>
+  );
 }
 
 /** A labelled arrow between two stops. */
@@ -143,29 +171,87 @@ export default function Pipeline({ ex }: { ex: Example }) {
     ...(other ? [["Other checks", other] as const] : []),
   ];
 
-  const thumb = (src: string, box?: boolean) => (
-    <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" className="h-full w-full object-cover" />
-      {box && (
-        <span
-          className="absolute border border-red-500"
-          style={{ left: `${xmin}%`, top: `${ymin}%`, width: `${xmax - xmin}%`, height: `${ymax - ymin}%` }}
-        />
-      )}
-    </>
+  const phoneTag = (text: React.ReactNode) => (
+    <span className="absolute bottom-1 right-1 rounded bg-black/75 px-1 text-[9.5px] font-medium text-white">{text}</span>
   );
-  const phoneWatch: PhoneStep[] = [
-    { title: "Your clip", short: "One incident, any angle", result: thumb(ex.poster) },
-    { title: "Find the moment", short: "Picks the clearest angle", result: thumb(chosen ? nearest(chosen.seconds) : st.contact) },
-    { title: "Record the facts", short: "Only what it sees, no rulings", result: thumb(st.contact, true) },
-    { title: "Zoom in on the boots", short: "Enlarged to see studs", result: thumb(st.closeup ?? st.contact) },
+  const phoneImage = (src: string) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt="" className="h-full w-full object-cover" />
+  );
+  const strip = [0, 2, 4, 6].map((n) => st.strip[n]).filter(Boolean);
+  const best = chosen ? nearest(chosen.seconds) : null;
+  const box = { left: `${xmin}%`, top: `${ymin}%`, width: `${xmax - xmin}%`, height: `${ymax - ymin}%` };
+  const phoneWatch: PhoneStop[] = [
+    { title: "Your clip", visual: <>{phoneImage(ex.poster)}{phoneTag(`${st.duration.toFixed(1)} s`)}</> },
+    {
+      title: "Find the moment",
+      visual: (
+        <div className="grid h-full grid-cols-2 gap-0.5 p-1">
+          {strip.map((fr) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={fr.src} src={fr.src} alt="" className={`h-full w-full rounded-[2px] object-cover ${fr.src === best ? "ring-2 ring-pitch" : "opacity-50"}`} />
+          ))}
+        </div>
+      ),
+    },
+    {
+      title: "Record the facts",
+      visual: (
+        <>
+          {phoneImage(st.contact)}
+          <span className="absolute border-2 border-red-500" style={box} />
+          {phoneTag(`contact ${m.contact_seconds?.toFixed(1)}s`)}
+        </>
+      ),
+    },
+    {
+      title: "Zoom on the boots",
+      visual: <>{phoneImage(st.closeup ?? st.contact)}{phoneTag(`studs ${f?.studs_showing ? "✓" : "✗"}`)}</>,
+    },
   ];
-  const phoneDecide: PhoneStep[] = [
-    { title: "Look up the rule", short: "Laws plus league guidance", result: <Value>10 rules</Value> },
-    { title: "Decide, twice", short: "Never sees the video", result: <Value>{agreed ? "Agree ✓" : "Differ"}</Value> },
-    { title: "Check every quote", short: "Must match word for word", result: <Value>{verified}/{verified} ✓</Value> },
-    { title: "Score confidence", short: "Points off for any doubt", result: <Value>{Math.round(conf.score * 100)}%</Value> },
+  const phoneDecide: PhoneStop[] = [
+    {
+      title: "Look up the rule",
+      visual: (
+        <div className="absolute inset-1.5 rotate-[-1.5deg] rounded bg-white px-1.5 py-1 font-serif text-[9.5px] leading-tight text-neutral-800 shadow">
+          <p className="font-sans text-[8px] font-semibold uppercase tracking-wide text-neutral-500">{quote?.kind === "guidance" ? "Referee guidance" : "Laws of the Game"}</p>
+          <p className="mt-0.5 line-clamp-3">
+            <mark className="bg-yellow-300 px-0.5 text-black">{quote?.highlight ?? quote?.quote}</mark>
+          </p>
+        </div>
+      ),
+    },
+    {
+      title: "Decide, twice",
+      visual: (
+        <div className="flex h-full flex-col justify-center gap-0.5 px-2 font-mono text-[10px] leading-tight">
+          <p className="flex justify-between"><span className="text-muted">Run 1</span>{cardName}</p>
+          <p className="flex justify-between"><span className="text-muted">Run 2</span>{agreed ? cardName : "differs"}</p>
+          <p className={agreed ? "text-pitch" : "text-red-500"}>{agreed ? "✓ agree" : "✗ disagree"}</p>
+        </div>
+      ),
+    },
+    {
+      title: "Check every quote",
+      visual: (
+        <div className="flex h-full flex-col justify-center px-2 text-[10px] leading-tight">
+          <p className="line-clamp-2 italic">“{quote?.highlight ?? quote?.quote}”</p>
+          <p className="mt-1 font-semibold text-pitch">✓ {verified} of {verified} match</p>
+        </div>
+      ),
+    },
+    {
+      title: "Score confidence",
+      visual: (
+        <div className="flex h-full flex-col justify-center px-2 font-mono leading-tight">
+          <p className="text-[10px] text-muted">
+            {Math.round(conf.model_score * 100)}%{working.filter(([, n]) => n).map(([, n]) => ` −${n}`).join("")}
+          </p>
+          <p className="text-lg font-semibold">{Math.round(conf.score * 100)}%</p>
+          <p className="text-[10px] text-muted">{ex.ai.confidence} confidence</p>
+        </div>
+      ),
+    },
   ];
 
   const watch: Stop[] = [
@@ -403,18 +489,30 @@ export default function Pipeline({ ex }: { ex: Example }) {
         </h2>
         <p className="mt-0.5 max-w-2xl text-xs leading-snug text-muted md:mt-3 md:text-base md:leading-normal">
           <span className="hidden md:inline">Everything below is what the tool actually produced for the tackle above. </span>
-          The model that watches never makes the call, and the one that makes the call never sees the video.
+          <span className="md:hidden">The model that watches never makes the call.</span>
+          <span className="hidden md:inline">
+            The model that watches never makes the call, and the one that makes the call never sees the video.
+          </span>
         </p>
 
-        {/* phones and small tablets: every step on one screen */}
+        {/* phones and small tablets: the same timeline, two steps to a row, all on one screen */}
         <div className="mt-2 md:hidden">
-          <p className="mb-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">Watching · video model</p>
-          <PhoneSteps steps={phoneWatch} first={1} />
-          <p className="relative my-1 rounded-full bg-surface py-0.5 text-center text-[11px] ring-1 ring-line">
-            <b>Only the facts go on.</b> <span className="text-muted">The video stops here.</span>
-          </p>
-          <p className="mb-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">Deciding · language model</p>
-          <PhoneSteps steps={phoneDecide} first={5} last />
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-wider text-muted">Watching · video model</p>
+          <PhoneRow stops={phoneWatch.slice(0, 2)} first={1} />
+          <PhoneTurn />
+          <PhoneRow stops={phoneWatch.slice(2)} first={3} />
+          <PhoneTurn
+            dashed
+            label={
+              <>
+                <b>Only the facts go on.</b> <span className="text-muted">The video stops here.</span>
+              </>
+            }
+          />
+          <p className="mb-1 font-mono text-[10px] uppercase tracking-wider text-muted">Deciding · language model</p>
+          <PhoneRow stops={phoneDecide.slice(0, 2)} first={5} />
+          <PhoneTurn />
+          <PhoneRow stops={phoneDecide.slice(2)} first={7} />
         </div>
 
         <div className="hidden md:block">
